@@ -32,7 +32,7 @@
 
 scriptVersion="1.8.0"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
-scriptLog="${4:-"/var/log/org.churchofjesuschrist.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
+scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                    # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
 debugMode="${5:-"verbose"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"userInput"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
 completionActionOption="${7:-"Restart Attended"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
@@ -52,7 +52,35 @@ loggedInUser=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { 
 reconOptions=""
 exitCode="0"
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# Retrieve Org name and install appropriate logos
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+org_name="$10"
+if [[ $org_name = "Emerson Collective" ]]; then
+    org_short_name="EC"
+    echo "Org short name is $org_short_name for $org_name"
+elif [[ $org_name = "XQ Institute" ]]; then
+    org_short_name="XQ"
+    echo "Org short name is $org_short_name for $org_name"
+elif [[ $org_name = *"CRED"* ]]; then
+    org_short_name="CC"
+    echo "Org short name is $org_short_name for $org_name"
+else
+    org_short_name="EC"
+    org_name="Emerson Collective"
+    echo "Defaulting to $org_short_name for $org_name"
+fi
+
+logo_file="/Library/${org_short_name}/logo.png"
+if [[ -e "$logo_file" ]]; then
+    echo "logo file exists at ${logo_file}"
+else
+    echo "logo file not found, running appropriate JAMF policy to install"
+    jamf policy -trigger install_${org_short_name}_logos
+fi
 
 ####################################################################################################
 #
