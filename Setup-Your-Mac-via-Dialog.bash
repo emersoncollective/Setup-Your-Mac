@@ -599,87 +599,161 @@ function policyJSONConfiguration() {
             policyJSON='
             {
                 "steps": [
+                    
                     {
                         "listitem": "Rosetta",
                         "icon": "8bac19160fabb0c8e7bac97b37b51d2ac8f38b7100b6357642d9505645d37b52",
                         "progresstext": "Rosetta enables a Mac with Apple silicon to use apps built for a Mac with an Intel processor.",
                         "trigger_list": [
                             {
-                                "trigger": "rosettaInstall",
+                                "trigger": "install_rosetta",
                                 "validation": "None"
                             },
                             {
-                                "trigger": "rosetta",
+                                "trigger": "install_rosetta",
+                                "validation": "Local"
+                            }            
+                        ]
+                    },
+                    
+                    {
+                        "listitem": "Code42",
+                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "progresstext": "Install the EC Data Protection and Backup Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_code42",
+                                "validation": "/Applications/Code42.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Crowdstrike Falcon",
+                        "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
+                        "progresstext": "Install The Computer Security Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_crowdstrike",
+                                "validation": "/Applications/Falcon.app/Contents/Info.plist"
+                            }
+                        ]
+                    },        {
+                        "listitem": "Enable Filevault 2",
+                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "progresstext": "Install and Configure macOS FileVault 2.",
+                        "trigger_list": [
+                            {
+                                "trigger": "enable_filevault",
                                 "validation": "Local"
                             }
                         ]
                     },
                     {
-                        "listitem": "FileVault Disk Encryption",
-                        "icon": "f9ba35bd55488783456d64ec73372f029560531ca10dfa0e8154a46d7732b913",
-                        "progresstext": "FileVault is built-in to macOS and provides full-disk encryption to help prevent unauthorized access to your Mac.",
+                        "listitem": "Microsoft Office 365",
+                        "icon": "b0fa7afb1073ce84e5cac968a1e93ea3f3f214419282603d84dbedbe6fe6bb57",
+                        "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
                         "trigger_list": [
                             {
-                                "trigger": "filevault",
+                                "trigger": "install_365",
+                                "validation": "/Applications/Microsoft Outlook.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Zoom",
+                        "icon": "be66420495a3f2f1981a49a0e0ad31783e9a789e835b4196af60554bf4c115ac",
+                        "progresstext": "Zoom is a videotelephony software program developed by Zoom Video Communications.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_zoom",
+                                "validation": "/Applications/zoom.us.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Google Chrome",
+                        "icon": "12d3d198f40ab2ac237cff3b5cb05b09f7f26966d6dffba780e4d4e5325cc701",
+                        "progresstext": "Browse the Internet with ease",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_google_chrome",
+                                "validation": "/Applications/Google Chrome.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Mozilla Firefox",
+                        "icon": "7fb08d1490912402809f42c8a466a096a09ece0a6de68fa83265ea745498912d",
+                        "progresstext": "Browse the Internet with ease",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_mozilla_firefox",
+                                "validation": "/Applications/Firefox.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    
+                    {
+                        "listitem": "Slack",
+                        "icon": "a1ecbe1a4418113177cc061def4996d20a01a1e9b9adf9517899fcca31f3c026",
+                        "progresstext": "Install Slack Messaging System",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_slack",
+                                "validation": "/Applications/Slack.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Google Drive",
+                        "icon": "a6954a50da661bd785407e23f83c6a1ac27006180eae1813086e64f4d6e65dcc",
+                        "progresstext": "The Preferred Cloud Storage Of The Collective.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_google_drive",
+                                "validation": "/Applications/Google Drive.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Conditional Access Tool",
+                        "icon": "7a97c3926c07d26c111a1f5c3d11fcaeb8471f6046e7b289d67bac74669f916a",
+                        "progresstext": "Ensure that Collective data is accessed by approved devices.",
+                        "trigger_list": [
+                            {
+                                "trigger": "'okta_cba_${type}'",
                                 "validation": "Local"
                             }
                         ]
                     },
                     {
-                        "listitem": "Sophos Endpoint",
-                        "icon": "c70f1acf8c96b99568fec83e165d2a534d111b0510fb561a283d32aa5b01c60c",
-                        "progresstext": "You’ll enjoy next-gen protection with Sophos Endpoint which doesn’t rely on signatures to catch malware.",
+                        "listitem": "Crowdstrike Running Validation",
+                        "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
+                        "progresstext": "Verify that the Crowdstrike Falcon agent is running",
                         "trigger_list": [
                             {
-                                "trigger": "sophosEndpoint",
-                                "validation": "/Applications/Sophos/Sophos Endpoint.app/Contents/Info.plist"
-                            }
-                        ]
-                    },
-                    {
-                        "listitem": "Sophos Endpoint Services (Remote)",
-                        "icon": "c05d087189f0b25a94f02eeb43b0c5c928e5e378f2168f603554bce2b5c71209",
-                        "progresstext": "Remotely validating Sophos Endpoint services …",
-                        "trigger_list": [
-                            {
-                                "trigger": "symvSophosEndpointRTS",
+                                "trigger": "crowdstrike_validation",
                                 "validation": "Remote"
                             }
                         ]
+                        
                     },
                     {
-                        "listitem": "Palo Alto GlobalProtect",
-                        "icon": "ea794c5a1850e735179c7c60919e3b51ed3ed2b301fe3f0f27ad5ebd394a2e4b",
-                        "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
+                        "listitem": "Code42 Running Validation",
+                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "progresstext": "Verify that the Code42 agent is running",
                         "trigger_list": [
                             {
-                                "trigger": "globalProtect",
-                                "validation": "/Applications/GlobalProtect.app/Contents/Info.plist"
-                            }
-                        ]
-                    },
-                    {
-                        "listitem": "Palo Alto GlobalProtect Services (Remote)",
-                        "icon": "709e8bdf0019e8faf9df85ec0a68545bfdb8bfa1227ac9bed9bba40a1fa8ff42",
-                        "progresstext": "Remotely validating Palo Alto GlobalProtect services …",
-                        "trigger_list": [
-                            {
-                                "trigger": "symvGlobalProtect",
+                                "trigger": "code42_validate",
                                 "validation": "Remote"
                             }
                         ]
+                        
                     },
                     {
-                        "listitem": "Final Configuration",
-                        "icon": "00d7c19b984222630f20b6821425c3548e4b5094ecd846b03bde0994aaf08826",
-                        "progresstext": "Finalizing Configuration …",
+                        "listitem": "Re-name Computer",
+                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "progresstext": "A listing of your Mac’s apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
                         "trigger_list": [
                             {
-                                "trigger": "finalConfiguration",
-                                "validation": "None"
-                            },
-                            {
-                                "trigger": "reconAtReboot",
+                                "trigger": "rename_computer",
                                 "validation": "None"
                             }
                         ]
@@ -1004,92 +1078,178 @@ function policyJSONConfiguration() {
             policyJSON='
             {
                 "steps": [
+                    
                     {
                         "listitem": "Rosetta",
                         "icon": "8bac19160fabb0c8e7bac97b37b51d2ac8f38b7100b6357642d9505645d37b52",
                         "progresstext": "Rosetta enables a Mac with Apple silicon to use apps built for a Mac with an Intel processor.",
                         "trigger_list": [
                             {
-                                "trigger": "rosettaInstall",
+                                "trigger": "install_rosetta",
                                 "validation": "None"
                             },
                             {
-                                "trigger": "rosetta",
+                                "trigger": "install_rosetta",
+                                "validation": "Local"
+                            }            
+                        ]
+                    },
+                    
+                    {
+                        "listitem": "Code42",
+                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "progresstext": "Install the EC Data Protection and Backup Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_code42",
+                                "validation": "/Applications/Code42.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Crowdstrike Falcon",
+                        "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
+                        "progresstext": "Install The Computer Security Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_crowdstrike",
+                                "validation": "/Applications/Falcon.app/Contents/Info.plist"
+                            }
+                        ]
+                    },        {
+                        "listitem": "Enable Filevault 2",
+                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "progresstext": "Install and Configure macOS FileVault 2.",
+                        "trigger_list": [
+                            {
+                                "trigger": "enable_filevault",
                                 "validation": "Local"
                             }
                         ]
                     },
                     {
-                        "listitem": "FileVault Disk Encryption",
-                        "icon": "f9ba35bd55488783456d64ec73372f029560531ca10dfa0e8154a46d7732b913",
-                        "progresstext": "FileVault is built-in to macOS and provides full-disk encryption to help prevent unauthorized access to your Mac.",
+                        "listitem": "Microsoft Office 365",
+                        "icon": "b0fa7afb1073ce84e5cac968a1e93ea3f3f214419282603d84dbedbe6fe6bb57",
+                        "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
                         "trigger_list": [
                             {
-                                "trigger": "filevault",
+                                "trigger": "install_365",
+                                "validation": "/Applications/Microsoft Outlook.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Zoom",
+                        "icon": "be66420495a3f2f1981a49a0e0ad31783e9a789e835b4196af60554bf4c115ac",
+                        "progresstext": "Zoom is a videotelephony software program developed by Zoom Video Communications.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_zoom",
+                                "validation": "/Applications/zoom.us.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Google Chrome",
+                        "icon": "12d3d198f40ab2ac237cff3b5cb05b09f7f26966d6dffba780e4d4e5325cc701",
+                        "progresstext": "Browse the Internet with ease",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_google_chrome",
+                                "validation": "/Applications/Google Chrome.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Mozilla Firefox",
+                        "icon": "7fb08d1490912402809f42c8a466a096a09ece0a6de68fa83265ea745498912d",
+                        "progresstext": "Browse the Internet with ease",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_mozilla_firefox",
+                                "validation": "/Applications/Firefox.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    
+                    {
+                        "listitem": "Slack",
+                        "icon": "a1ecbe1a4418113177cc061def4996d20a01a1e9b9adf9517899fcca31f3c026",
+                        "progresstext": "Install Slack Messaging System",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_slack",
+                                "validation": "/Applications/Slack.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Google Drive",
+                        "icon": "a6954a50da661bd785407e23f83c6a1ac27006180eae1813086e64f4d6e65dcc",
+                        "progresstext": "The Preferred Cloud Storage Of The Collective.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_google_drive",
+                                "validation": "/Applications/Google Drive.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Conditional Access Tool",
+                        "icon": "7a97c3926c07d26c111a1f5c3d11fcaeb8471f6046e7b289d67bac74669f916a",
+                        "progresstext": "Ensure that Collective data is accessed by approved devices.",
+                        "trigger_list": [
+                            {
+                                "trigger": "'okta_cba_${type}'",
                                 "validation": "Local"
                             }
                         ]
                     },
                     {
-                        "listitem": "Sophos Endpoint",
-                        "icon": "c70f1acf8c96b99568fec83e165d2a534d111b0510fb561a283d32aa5b01c60c",
-                        "progresstext": "You’ll enjoy next-gen protection with Sophos Endpoint which doesn’t rely on signatures to catch malware.",
+                        "listitem": "Crowdstrike Running Validation",
+                        "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
+                        "progresstext": "Verify that the Crowdstrike Falcon agent is running",
                         "trigger_list": [
                             {
-                                "trigger": "sophosEndpoint",
-                                "validation": "/Applications/Sophos/Sophos Endpoint.app/Contents/Info.plist"
-                            },
-                            {
-                                "trigger": "symvSophosEndpointRTS",
+                                "trigger": "crowdstrike_validation",
                                 "validation": "Remote"
                             }
                         ]
+                        
                     },
                     {
-                        "listitem": "Palo Alto GlobalProtect",
-                        "icon": "ea794c5a1850e735179c7c60919e3b51ed3ed2b301fe3f0f27ad5ebd394a2e4b",
-                        "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
+                        "listitem": "Code42 Running Validation",
+                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "progresstext": "Verify that the Code42 agent is running",
                         "trigger_list": [
                             {
-                                "trigger": "globalProtect",
-                                "validation": "/Applications/GlobalProtect.app/Contents/Info.plist"
-                            },
-                            {
-                                "trigger": "symvGlobalProtect",
+                                "trigger": "code42_validate",
                                 "validation": "Remote"
                             }
                         ]
+                        
                     },
                     {
-                        "listitem": "Final Configuration",
-                        "icon": "00d7c19b984222630f20b6821425c3548e4b5094ecd846b03bde0994aaf08826",
-                        "progresstext": "Finalizing Configuration …",
-                        "trigger_list": [
-                            {
-                                "trigger": "finalConfiguration",
-                                "validation": "None"
-                            },
-                            {
-                                "trigger": "reconAtReboot",
-                                "validation": "None"
-                            }
-                        ]
-                    },
-                    {
-                        "listitem": "Computer Inventory",
+                        "listitem": "Re-name Computer",
                         "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
                         "progresstext": "A listing of your Mac’s apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
                         "trigger_list": [
                             {
-                                "trigger": "recon",
+                                "trigger": "rename_computer",
                                 "validation": "None"
                             }
                         ]
-                    }
-                ]
+                    },                    {
+                        "listitem": "Complete Computer Setup",
+                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "progresstext": "Mark the setup process as complete and run a full inventory",
+                        "trigger_list": [
+                            {
+                                "trigger": "setup_complete",
+                                "validation": "/Library/Preferences/com.ec.plist"
+                            }
+                        ]
+                    }                ]
             }
             '
-            ;;
+        ;;
 
     esac
 
