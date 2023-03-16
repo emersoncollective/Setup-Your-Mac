@@ -63,7 +63,7 @@ exitCode="0"
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-org_name="$10"
+org_name="${10}"
 if [[ $org_name = "Emerson Collective" ]]; then
     org_short_name="EC"
     echo "Org short name is $org_short_name for $org_name"
