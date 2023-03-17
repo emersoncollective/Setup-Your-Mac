@@ -20,7 +20,14 @@
 #   - Added `currentLoggedInUser` function to better validate `loggedInUser` (Issue No. 2)
 #   - Added new "Microsoft Office 365" Remote Validation (Pull Request No. 3)
 #   - Improved logging when `welcomeDialog` is `video` or `false` (Issue No. 4)
-#   - Create `overlayicon` from Self Service's custom icon (thanks, Mike Schwartz!)
+#   - Create `overlayicon` from Self Service's custom icon (thanks, @meschwartz!)
+#
+#   Version 1.8.2, 16-Mar-2023, Dan K. Snelson (@dan-snelson)
+#   - Allow "first name" to correctly handle names in "Lastname, Firstname" format (Pull Request No. 11; thanks, @meschwartz!)
+#   - Corrected `PATH` (thanks, @Theile!)
+#   - `Configuration` no longer displays in SYM's `infobox` when `welcomeDialog` is set to `false` or `video` (Issue No. 12; thanks, @Manikandan!)
+#   - Previously installed apps with a `filepath` validation now display "Previously Installed" (instead of a generic "Installed"; Issue No. 13; thanks for the idea, @Manikandan!)
+#   - Updated icon hashes
 #
 ####################################################################################################
 
@@ -36,9 +43,15 @@
 # Script Version and Jamf Pro Script Parameters
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+<<<<<<< HEAD
 scriptVersion="1.8.1"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                    # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
+=======
+scriptVersion="1.8.2-rc4"
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin
+scriptLog="${4:-"/var/log/org.churchofjesuschrist.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
+>>>>>>> c023ca8bee71b363f852669e4aa86a6c5898e758
 debugMode="${5:-"verbose"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
 completionActionOption="${7:-"Restart Attended"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
@@ -253,7 +266,7 @@ until { [[ "${loggedInUser}" != "_mbsetupuser" ]] || [[ "${counter}" -gt "180" ]
 done
 
 loggedInUserFullname=$( id -F "${loggedInUser}" )
-loggedInUserFirstname=$( echo "$loggedInUserFullname" | cut -d " " -f 1 )
+loggedInUserFirstname=$( echo "$loggedInUserFullname" | sed -E 's/^.*, // ; s/([^ ]*).*/\1/' )
 loggedInUserID=$( id -u "${loggedInUser}" )
 updateScriptLog "PRE-FLIGHT CHECK: Current Logged-in User First Name: ${loggedInUserFirstname}"
 updateScriptLog "PRE-FLIGHT CHECK: Current Logged-in User ID: ${loggedInUserID}"
@@ -605,7 +618,7 @@ dialogSetupYourMacCMD="$dialogBinary \
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # From @astrugatch: I added this line to global variables:
-# jsonURL=${10}                                                               # URL Hosting JSON for policy_array
+# jsonURL=${10} # URL Hosting JSON for policy_array
 #
 # And this line replaces the entirety of the policy_array (~ line 503):
 # policy_array=("$(curl -sL $jsonURL)")
@@ -778,9 +791,15 @@ function policyJSONConfiguration() {
                         
                     },
                     {
+<<<<<<< HEAD
                         "listitem": "Code42 Running Validation",
                         "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
                         "progresstext": "Verify that the Code42 agent is running",
+=======
+                        "listitem": "Final Configuration",
+                        "icon": "4723e3e341a7e11e6881e418cf91b157fcc081bdb8948697750e5da3562df728",
+                        "progresstext": "Finalizing Configuration …",
+>>>>>>> c023ca8bee71b363f852669e4aa86a6c5898e758
                         "trigger_list": [
                             {
                                 "trigger": "code42_validate",
@@ -802,7 +821,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Computer Inventory",
-                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "icon": "ff2147a6c09f5ef73d1c4406d00346811a9c64c0b6b7f36eb52fcb44943d26f9",
                         "progresstext": "A listing of your Mac’s apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
                         "trigger_list": [
                             {
@@ -919,7 +938,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Final Configuration",
-                        "icon": "00d7c19b984222630f20b6821425c3548e4b5094ecd846b03bde0994aaf08826",
+                        "icon": "4723e3e341a7e11e6881e418cf91b157fcc081bdb8948697750e5da3562df728",
                         "progresstext": "Finalizing Configuration …",
                         "trigger_list": [
                             {
@@ -934,7 +953,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Computer Inventory",
-                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "icon": "ff2147a6c09f5ef73d1c4406d00346811a9c64c0b6b7f36eb52fcb44943d26f9",
                         "progresstext": "A listing of your Mac’s apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
                         "trigger_list": [
                             {
@@ -1094,7 +1113,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Final Configuration",
-                        "icon": "00d7c19b984222630f20b6821425c3548e4b5094ecd846b03bde0994aaf08826",
+                        "icon": "4723e3e341a7e11e6881e418cf91b157fcc081bdb8948697750e5da3562df728",
                         "progresstext": "Finalizing Configuration …",
                         "trigger_list": [
                             {
@@ -1109,7 +1128,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Computer Inventory",
-                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "icon": "ff2147a6c09f5ef73d1c4406d00346811a9c64c0b6b7f36eb52fcb44943d26f9",
                         "progresstext": "A listing of your Mac’s apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
                         "trigger_list": [
                             {
@@ -1253,9 +1272,15 @@ function policyJSONConfiguration() {
                         ]
                     },
                     {
+<<<<<<< HEAD
                         "listitem": "Crowdstrike Running Validation",
                         "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
                         "progresstext": "Verify that the Crowdstrike Falcon agent is running",
+=======
+                        "listitem": "Final Configuration",
+                        "icon": "4723e3e341a7e11e6881e418cf91b157fcc081bdb8948697750e5da3562df728",
+                        "progresstext": "Finalizing Configuration …",
+>>>>>>> c023ca8bee71b363f852669e4aa86a6c5898e758
                         "trigger_list": [
                             {
                                 "trigger": "crowdstrike_validation",
@@ -1277,8 +1302,13 @@ function policyJSONConfiguration() {
                         
                     },
                     {
+<<<<<<< HEAD
                         "listitem": "Re-name Computer",
                         "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+=======
+                        "listitem": "Computer Inventory",
+                        "icon": "ff2147a6c09f5ef73d1c4406d00346811a9c64c0b6b7f36eb52fcb44943d26f9",
+>>>>>>> c023ca8bee71b363f852669e4aa86a6c5898e758
                         "progresstext": "A listing of your Mac’s apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
                         "trigger_list": [
                             {
@@ -1603,8 +1633,10 @@ function confirmPolicyExecution() {
                 sleep 1
             elif [[ -f "${validation}" ]]; then
                 updateScriptLog "SETUP YOUR MAC DIALOG: Confirm Policy Execution: ${validation} exists; skipping 'run_jamf_trigger ${trigger}'"
+                previouslyInstalled="true"
             else
                 updateScriptLog "SETUP YOUR MAC DIALOG: Confirm Policy Execution: ${validation} does NOT exist; executing 'run_jamf_trigger ${trigger}'"
+                previouslyInstalled="false"
                 run_jamf_trigger "${trigger}"
             fi
             ;;
@@ -1655,7 +1687,9 @@ function validatePolicyResult() {
 
         */* ) 
             updateScriptLog "SETUP YOUR MAC DIALOG: Validate Policy Result: Testing for \"$validation\" …"
-            if [[ -f "${validation}" ]]; then
+            if [[ "${previouslyInstalled}" == "true" ]]; then
+                dialogUpdateSetupYourMac "listitem: index: $i, status: success, statustext: Previously Installed"
+            elif [[ -f "${validation}" ]]; then
                 dialogUpdateSetupYourMac "listitem: index: $i, status: success, statustext: Installed"
             else
                 dialogUpdateSetupYourMac "listitem: index: $i, status: fail, statustext: Failed"
@@ -2411,13 +2445,20 @@ dialogUpdateWelcome "quit:"
 # Output Line Number in `verbose` Debug Mode
 if [[ "${debugMode}" == "verbose" ]]; then updateScriptLog "# # # SETUP YOUR MAC VERBOSE DEBUG MODE: Line No. ${LINENO} # # #" ; fi
 
+# When `welcomeDialog` is set to `false` or `video`, set the value of `infoboxConfiguration` to null (thanks, @Manikandan!)
+if [[ "${symConfiguration}" == *"Catch-all"* ]]; then
+    infoboxConfiguration=""
+else
+    infoboxConfiguration="${symConfiguration}"
+fi
+
 infobox=""
 
 if [[ -n ${comment} ]]; then infobox+="**Comment:**  \n$comment  \n\n" ; fi
 if [[ -n ${computerName} ]]; then infobox+="**Computer Name:**  \n$computerName  \n\n" ; fi
 if [[ -n ${userName} ]]; then infobox+="**Username:**  \n$userName  \n\n" ; fi
 if [[ -n ${assetTag} ]]; then infobox+="**Asset Tag:**  \n$assetTag  \n\n" ; fi
-if [[ -n ${symConfiguration} ]]; then infobox+="**Configuration:**  \n$symConfiguration  \n\n" ; fi
+if [[ -n ${infoboxConfiguration} ]]; then infobox+="**Configuration:**  \n$infoboxConfiguration  \n\n" ; fi
 if [[ -n ${department} ]]; then infobox+="**Department:**  \n$department  \n\n" ; fi
 
 dialogUpdateSetupYourMac "infobox: ${infobox}"
