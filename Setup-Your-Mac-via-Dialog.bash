@@ -43,15 +43,9 @@
 # Script Version and Jamf Pro Script Parameters
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-<<<<<<< HEAD
 scriptVersion="1.8.1"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                    # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
-=======
-scriptVersion="1.8.2-rc4"
-export PATH=/usr/bin:/bin:/usr/sbin:/sbin
-scriptLog="${4:-"/var/log/org.churchofjesuschrist.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
->>>>>>> c023ca8bee71b363f852669e4aa86a6c5898e758
 debugMode="${5:-"verbose"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
 completionActionOption="${7:-"Restart Attended"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
@@ -791,15 +785,9 @@ function policyJSONConfiguration() {
                         
                     },
                     {
-<<<<<<< HEAD
                         "listitem": "Code42 Running Validation",
                         "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
                         "progresstext": "Verify that the Code42 agent is running",
-=======
-                        "listitem": "Final Configuration",
-                        "icon": "4723e3e341a7e11e6881e418cf91b157fcc081bdb8948697750e5da3562df728",
-                        "progresstext": "Finalizing Configuration …",
->>>>>>> c023ca8bee71b363f852669e4aa86a6c5898e758
                         "trigger_list": [
                             {
                                 "trigger": "code42_validate",
@@ -1272,15 +1260,9 @@ function policyJSONConfiguration() {
                         ]
                     },
                     {
-<<<<<<< HEAD
                         "listitem": "Crowdstrike Running Validation",
                         "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
                         "progresstext": "Verify that the Crowdstrike Falcon agent is running",
-=======
-                        "listitem": "Final Configuration",
-                        "icon": "4723e3e341a7e11e6881e418cf91b157fcc081bdb8948697750e5da3562df728",
-                        "progresstext": "Finalizing Configuration …",
->>>>>>> c023ca8bee71b363f852669e4aa86a6c5898e758
                         "trigger_list": [
                             {
                                 "trigger": "crowdstrike_validation",
@@ -1302,13 +1284,8 @@ function policyJSONConfiguration() {
                         
                     },
                     {
-<<<<<<< HEAD
                         "listitem": "Re-name Computer",
                         "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
-=======
-                        "listitem": "Computer Inventory",
-                        "icon": "ff2147a6c09f5ef73d1c4406d00346811a9c64c0b6b7f36eb52fcb44943d26f9",
->>>>>>> c023ca8bee71b363f852669e4aa86a6c5898e758
                         "progresstext": "A listing of your Mac’s apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
                         "trigger_list": [
                             {
