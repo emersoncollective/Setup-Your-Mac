@@ -33,7 +33,7 @@
 # Script Version and Jamf Pro Script Parameters
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="1.8.1"
+scriptVersion="1.9.0"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                    # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
 debugMode="${5:-"verbose"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
@@ -718,7 +718,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Microsoft Office 365",
-                        "icon": "b0fa7afb1073ce84e5cac968a1e93ea3f3f214419282603d84dbedbe6fe6bb57",
+                        "icon": "66e495c8ac8f827b600b4bd78976b4e023650791f5bcdcd90e08a4d01a2a469f",
                         "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
                         "trigger_list": [
                             {
@@ -1173,13 +1173,24 @@ function policyJSONConfiguration() {
                     },
                     
                     {
-                        "listitem": "Code42",
+                        "listitem": "Code42 Backup Software",
                         "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
-                        "progresstext": "Install the EC Data Protection and Backup Software",
+                        "progresstext": "Install the EC Backup Software",
                         "trigger_list": [
                             {
                                 "trigger": "install_code42",
                                 "validation": "/Applications/Code42.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Code42 Data Loss Prevention Software",
+                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "progresstext": "Install the EC Data Loss Protection Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_incydr",
+                                "validation": "/Applications/Code42-AAT.app/Contents/Info.plist"
                             }
                         ]
                     },
@@ -1206,7 +1217,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Microsoft Office 365",
-                        "icon": "b0fa7afb1073ce84e5cac968a1e93ea3f3f214419282603d84dbedbe6fe6bb57",
+                        "icon": "66e495c8ac8f827b600b4bd78976b4e023650791f5bcdcd90e08a4d01a2a469f",
                         "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
                         "trigger_list": [
                             {
