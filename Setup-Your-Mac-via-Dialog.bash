@@ -36,7 +36,7 @@
 scriptVersion="1.9.0"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                    # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
-debugMode="${5:-"verbose"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
+debugMode="${5:-"true"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
 completionActionOption="${7:-"Restart Attended"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
 requiredMinimumBuild="${8:-"disabled"}"                                         # Parameter 8: Required Minimum Build [ disabled (default) | 22E ] (i.e., Your organization's required minimum build of macOS to allow users to proceed; use "22E" for macOS 13.3)
@@ -45,7 +45,7 @@ outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Operating System, currently logged-in user and default Exit Code
+# Operating System, cpu, currently logged-in user and default Exit Code
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 osVersion=$( sw_vers -productVersion )
@@ -53,7 +53,7 @@ osBuild=$( sw_vers -buildVersion )
 osMajorVersion=$( echo "${osVersion}" | awk -F '.' '{print $1}' )
 reconOptions=""
 exitCode="0"
-
+cpu=$(sysctl -n machdep.cpu.brand_string | awk '{print $1}')
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Retrieve Org name and install appropriate logos
@@ -597,7 +597,6 @@ dialogSetupYourMacCMD="$dialogBinary \
 --messagefont 'size=14' \
 --height '780' \
 --position 'centre' \
---blurscreen \
 --ontop \
 --overlayicon \"$overlayicon\" \
 --quitkey k \
@@ -670,7 +669,7 @@ function policyJSONConfiguration() {
                     
                     {
                         "listitem": "Rosetta",
-                        "icon": "8bac19160fabb0c8e7bac97b37b51d2ac8f38b7100b6357642d9505645d37b52",
+                            "icon": "8bac19160fabb0c8e7bac97b37b51d2ac8f38b7100b6357642d9505645d37b52",
                         "progresstext": "Rosetta enables a Mac with Apple silicon to use apps built for a Mac with an Intel processor.",
                         "trigger_list": [
                             {
@@ -690,7 +689,7 @@ function policyJSONConfiguration() {
                         "progresstext": "Install the EC Data Protection and Backup Software",
                         "trigger_list": [
                             {
-                                "trigger": "install_code42",
+                                "trigger": "'install_code42_${type}'",
                                 "validation": "/Applications/Code42.app/Contents/Info.plist"
                             }
                         ]
@@ -786,7 +785,7 @@ function policyJSONConfiguration() {
                         "progresstext": "Ensure that Collective data is accessed by approved devices.",
                         "trigger_list": [
                             {
-                                "trigger": "'okta_cba_${type}'",
+                                "trigger": "'okta_cba_${cpu}'",
                                 "validation": "Local"
                             }
                         ]
@@ -1525,7 +1524,7 @@ function finalise(){
         updateScriptLog "Jamf Pro Policy Name Failures:"
         updateScriptLog "${jamfProPolicyNameFailures}"
 
-        dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}.  \n\nPlease complete the following steps:\n1. Reboot and login to your Mac  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the Help Desk,  \n+1 (801) 555-1212, and mention [KB86753099](https://servicenow.company.com/support?id=kb_article_view&sysparm_article=KB86753099#Failures). "
+        dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}.  \n\nPlease complete the following steps:\n1. Reboot and login to your Mac  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the IT Team at ithelp@emersoncollective.com. "
         dialogUpdateFailure "icon: SF=xmark.circle.fill,weight=bold,colour1=#BB1717,colour2=#F31F1F"
         dialogUpdateFailure "button1text: ${button1textCompletionActionOption}"
 
