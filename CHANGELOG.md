@@ -1,8 +1,7 @@
 # CHANGELOG
 
 ## 1.10.0
-### 08-May-2023
-[Release-specific Blog Post](https://snelson.us/2023/05/setup-your-mac-1-10-0-via-swiftdialog)
+### TBD-May-2023
 - 🆕 **Dynamic Download Estimates** (Addresses [Issue No. 7](https://github.com/dan-snelson/Setup-Your-Mac/issues/7); thanks for the idea, @DevliegereM; heavy-lifting provided by @bartreardon!)
     - Manually set `configurationDownloadEstimation` within the SYM script to `true` to enable
     - New `calculateFreeDiskSpace` function will record free space to `scriptLog` before and after SYM execution
@@ -43,11 +42,9 @@
 - Added `trigger` `validation` to "Elapsed Time" output
 - Updated `webhookMessage` to include Slack functionality ([Pull Request No. 48](https://github.com/dan-snelson/Setup-Your-Mac/pull/48); thanks @iDrewbs!)
 - Add button to computer record for Slack webhook ([Pull Request No. 49](https://github.com/dan-snelson/Setup-Your-Mac/pull/49); thanks @drtaru!)
-- Fix Banner Text displaying when set to False ([Pull Request No. 51](https://github.com/dan-snelson/Setup-Your-Mac/pull/51); thanks @rougegoat!)
 
 ## 1.9.0
 ### 01-Apr-2023
-[Release-specific Blog Post](https://snelson.us/2023/04/setup-your-mac-1-9-0-via-swiftdialog/)
 - Previously installed apps with a `filepath` validation now display "Previously Installed" (instead of a generic "Installed"; [Issue No. 13](https://github.com/dan-snelson/Setup-Your-Mac/issues/13); thanks for the idea, @Manikandan!)
 - Allow "first name" to correctly handle names in "Lastname, Firstname" format ([Pull Request No. 11](https://github.com/dan-snelson/Setup-Your-Mac/pull/11); thanks @meschwartz!)
 - Corrected `PATH` (thanks, @Theile!)
@@ -59,7 +56,6 @@
 
 ## 1.8.1
 ### 11-Mar-2023
-[Release-specific Blog Post](https://snelson.us/2023/03/setup-your-mac-1-8-0-via-swiftdialog/)
 - Added `currentLoggedInUser` function to better validate `loggedInUser` (Addresses [Issue No. 2](https://github.com/dan-snelson/Setup-Your-Mac/issues/2))
 - Added new [Microsoft Office 365](/Setup-Your-Mac/Validations/Microsoft%20Office%20365.bash) Remote Validation ([Pull Request No. 3](https://github.com/dan-snelson/Setup-Your-Mac/pull/3))
 - Improved logging when `welcomeDialog` is `video` or `false` (Addresses [Issue No. 4](https://github.com/dan-snelson/Setup-Your-Mac/issues/4))
@@ -84,7 +80,6 @@
 
 ## 1.7.2
 ### 28-Feb-2023
-[Release-specific Blog Post](https://snelson.us/2023/02/setup-your-mac-via-swiftdialog-1-7-0/)
 - Reordered Pre-Flight Check to not validate OS until AFTER Setup Assistant / Finder & Dock
 - Added `disabled` option for `requiredMinimumBuild`
 - Added check for Self Service's `brandingimage.png` (Addresses [Issue No. 40](https://github.com/dan-snelson/dialog-scripts/issues/40))
@@ -93,7 +88,7 @@
 
 ## 1.7.1
 ### 07-Feb-2023
-[Release-specific Blog Post](https://snelson.us/2023/02/setup-your-mac-via-swiftdialog-1-7-0/)
+
 - Addresses [Issue No. 35](https://github.com/dan-snelson/dialog-scripts/issues/35)
 - Improves user-interaction with `helpmessage` under certain circumstances (thanks, @bartreardon!)
 - Increased `debugMode` delay (thanks for the heads-up, @Lewis B!)

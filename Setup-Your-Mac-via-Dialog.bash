@@ -10,7 +10,7 @@
 #
 # HISTORY
 #
-#   Version 1.10.0, 08-May-2023, Dan K. Snelson (@dan-snelson)
+#   Version 1.10.0, Release Date TBD, Dan K. Snelson (@dan-snelson)
 #   - 🆕 **Dynamic Download Estimates** (Addresses [Issue No. 7](https://github.com/dan-snelson/Setup-Your-Mac/issues/7); thanks for the idea, @DevliegereM; heavy-lifting provided by @bartreardon!)
 #       - Manually set `configurationDownloadEstimation` within the SYM script to `true` to enable
 #       - New `calculateFreeDiskSpace` function will record free space to `scriptLog` before and after SYM execution
@@ -67,11 +67,14 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 scriptVersion="1.10.0"
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
+scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                    # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
-scriptLog="${4:-"/var/log/org.churchofjesuschrist.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
-debugMode="${5:-"verbose"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
-welcomeDialog="${6:-"userInput"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
-completionActionOption="${7:-"Restart Attended"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
+scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
+debugMode="${5:-"false"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
+welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
+
+completionActionOption="${7:-"wait"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
 requiredMinimumBuild="${8:-"disabled"}"                                         # Parameter 8: Required Minimum Build [ disabled (default) | 22E ] (i.e., Your organization's required minimum build of macOS to allow users to proceed; use "22E" for macOS 13.3)
 outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     # Parameter 9: Outdated OS Action [ /System/Library/CoreServices/Software Update.app (default) | jamfselfservice://content?entity=policy&id=117&action=view ] (i.e., Jamf Pro Self Service policy ID for operating system ugprades)
 webhookURL="${10:-""}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
@@ -79,59 +82,7 @@ webhookURL="${10:-""}"                                                          
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Various Feature Variables
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-debugModeSleepAmount="3"    # Delay for various actions when running in Debug Mode
-failureDialog="true"        # Display the so-called "Failure" dialog (after the main SYM dialog) [ true | false ]
-
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Welcome Message User Input Customization Choices (thanks, @rougegoat!)
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# These control which user input boxes are added to the first page of Setup Your Mac. If you do not want to ask about a value, set it to any other value
-promptForUsername="true"
-prefillUsername="true"          # prefills the currently logged in user's username
-promptForComputerName="true"
-promptForAssetTag="true"
-promptForRoom="true"
-promptForConfiguration="true"   # Removes the Configuration dropdown entirely and uses the "Catch-all (i.e., used when `welcomeDialog` is set to `video` or `false`)" policyJSON
-
-# Disables the Blurscreen enabled by default in Production
-moveableInProduction="false"
-
-# An unsorted, comma-separated list of buildings (with possible duplication). If empty, this will be hidden from the user info prompt
-buildingsListRaw="Benson (Ezra Taft) Building,Brimhall (George H.) Building,BYU Conference Center,Centennial Carillon Tower,Chemicals Management Building,Clark (Herald R.) Building,Clark (J. Reuben) Building,Clyde (W.W.) Engineering Building,Crabtree (Roland A.) Technology Building,Ellsworth (Leo B.) Building,Engineering Building,Eyring (Carl F.) Science Center,Grant (Heber J.) Building,Harman (Caroline Hemenway) Building,Harris (Franklin S.) Fine Arts Center,Johnson (Doran) House East,Kimball (Spencer W.) Tower,Knight (Jesse) Building,Lee (Harold B.) Library,Life Sciences Building,Life Sciences Greenhouses,Maeser (Karl G.) Building,Martin (Thomas L.) Building,McKay (David O.) Building,Nicholes (Joseph K.) Building,Smith (Joseph F.) Building,Smith (Joseph) Building,Snell (William H.) Building,Talmage (James E.) Math Sciences/Computer Building,Tanner (N. Eldon) Building,Taylor (John) Building,Wells (Daniel H.) Building"
-
-# A sorted, unique, JSON-compatible list of buildings
-buildingsList=$( echo "${buildingsListRaw}" | tr ',' '\n' | sort -f | uniq | sed -e 's/^/\"/' -e 's/$/\",/' -e '$ s/.$//' )
-
-# An unsorted, comma-separated list of departments (with possible duplication). If empty, this will be hidden from the user info prompt
-departmentListRaw="Asset Management,Sales,Australia Area Office,Purchasing / Sourcing,Board of Directors,Strategic Initiatives & Programs,Operations,Business Development,Marketing,Creative Services,Customer Service / Customer Experience,Risk Management,Engineering,Finance / Accounting,Sales,General Management,Human Resources,Marketing,Investor Relations,Legal,Marketing,Sales,Product Management,Production,Corporate Communications,Information Technology / Technology,Quality Assurance,Project Management Office,Sales,Technology"
-
-# A sorted, unique, JSON-compatible list of departments
-departmentList=$( echo "${departmentListRaw}" | tr ',' '\n' | sort -f | uniq | sed -e 's/^/\"/' -e 's/$/\",/' -e '$ s/.$//' )
-
-# Branding overrides
-brandingBanner="https://img.freepik.com/free-photo/abstract-grunge-decorative-relief-navy-blue-stucco-wall-texture-wide-angle-rough-colored-background_1258-28311.jpg"
-brandingBannerDisplayText="true"
-brandingIconLight="https://cdn-icons-png.flaticon.com/512/979/979585.png"
-brandingIconDark="https://cdn-icons-png.flaticon.com/512/740/740878.png"
-
-# IT Support Variables - Use these if the default text is fine but you want your org's info inserted instead
-supportTeamName="Help Desk"
-supportTeamPhone="+1 (801) 555-1212"
-supportTeamEmail="support@domain.org"
-supportKB="KB86753099"
-supportTeamErrorKB=", and mention [${supportKB}](https://servicenow.company.com/support?id=kb_article_view&sysparm_article=${supportKB}#Failures)"
-supportTeamHelpKB="\n- **Knowledge Base Article:** ${supportKB}"
-
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Operating System, Computer Model Name, etc.
+# Operating System, cpu, currently logged-in user and default Exit Code
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 osVersion=$( sw_vers -productVersion )
@@ -140,8 +91,36 @@ osMajorVersion=$( echo "${osVersion}" | awk -F '.' '{print $1}' )
 modelName=$( /usr/libexec/PlistBuddy -c 'Print :0:_items:0:machine_name' /dev/stdin <<< "$(system_profiler -xml SPHardwareDataType)" )
 reconOptions=""
 exitCode="0"
+cpu=$(sysctl -n machdep.cpu.brand_string | awk '{print $1}')
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# Retrieve Org name and install appropriate logos
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+org_name="${10}"
+if [[ $org_name = "Emerson Collective" ]]; then
+    org_short_name="EC"
+    echo "Org short name is $org_short_name for $org_name"
+elif [[ $org_name = "XQ Institute" ]]; then
+    org_short_name="XQ"
+    echo "Org short name is $org_short_name for $org_name"
+elif [[ $org_name = *"CRED"* ]]; then
+    org_short_name="CC"
+    echo "Org short name is $org_short_name for $org_name"
+else
+    org_short_name="EC"
+    org_name="Emerson Collective"
+    echo "Defaulting to $org_short_name for $org_name"
+fi
 
+logo_file="/Library/${org_short_name}/logo.png"
+if [[ -e "$logo_file" ]]; then
+    echo "logo file exists at ${logo_file}"
+else
+    echo "logo file not found, running appropriate JAMF policy to install"
+    jamf policy -trigger install_${org_short_name}_logos
+fi
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Configuration Download Estimation
@@ -161,6 +140,14 @@ configurationThreeSize="106"            # Configuration Three in Gibibits (i.e.,
 # Pre-flight Checks
 #
 ####################################################################################################
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Set set up complete to false
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+defaults write com.ec.plist setup_complete False
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Pre-flight Check: Client-side Logging
@@ -504,24 +491,10 @@ jamfBinary="/usr/local/bin/jamf"
 # "Welcome" dialog Title, Message and Icon
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}"
-
-welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}. \n\nIf you need assistance, please contact the ${supportTeamName}: ${supportTeamPhone} and mention ${supportKB}. \n\n---"
-
-if [[ "${promptForConfiguration}" == "true" ]]; then
-    welcomeMessage+="  \n\n#### Configurations  \n- **Required:** Minimum organization apps  \n- **Recommended:** Required apps and Microsoft Office  \n- **Complete:** Recommended apps, Adobe Acrobat Reader and Google Chrome"
-else
-    welcomeMessage=${welcomeMessage//", select your preferred **Configuration**"/}
-fi
-
-
-if [[ -n "${brandingBanner}" ]]; then
-    welcomeBannerImage="${brandingBanner}"
-else
-    welcomeBannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
-fi
-if [[ "${brandingBannerDisplayText}" == "true" ]]; then welcomeBannerText="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}";
-else welcomeBannerText=""; fi
+welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname} and welcome to your new Mac!"
+welcomeMessage="Please enter your Mac's **Asset Tag**, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac.  \n\nOnce completed, the **Wait** button will be enabled and you'll be able to review the results before restarting your Mac.  \n\nIf you need assistance, please contact the IT Team at ithelp@emersoncollective.com.  \n\n---  \n\n#### Configurations  \n- **Required:** Minimum organization apps  \n- **Recommended:** Required apps and Microsoft Office  \n- **Complete:** Recommended apps, Adobe Acrobat Reader and Google Chrome"
+welcomeBannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
+welcomeBannerText="Happy $( date +'%A' ), ${loggedInUserFirstname} and welcome to your new Mac!"
 welcomeCaption="Please review the above video, then click Continue."
 welcomeVideoID="vimeoid=821866488"
 
@@ -667,15 +640,9 @@ welcomeJSON='
 
 title="Setting up ${loggedInUserFirstname}‘s ${modelName}"
 message="Please wait while the following apps are installed …"
-if [[ -n "${brandingBanner}" ]]; then
-    bannerImage="${brandingBanner}"
-else
-    bannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
-fi
-if [[ "${brandingBannerDisplayText}" == "true" ]] ; then bannerText="Setting up ${loggedInUserFirstname}‘s ${modelName}";
-else bannerText=""; fi
-
-helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n- **Telephone:** ${supportTeamPhone}  \n- **Email:** ${supportTeamEmail}  ${supportTeamHelpKB}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
+bannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
+bannerText="Setting up ${loggedInUserFirstname}'s Mac"
+helpmessage="If you need assistance, please contact the IT Team  \n- **Email:** ithelp@emersoncollective.com  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
 infobox="Analyzing input …" # Customize at "Update Setup Your Mac's infobox"
 
 # Check if the custom bannerImage is available, and if not, use a alternative image
@@ -723,7 +690,6 @@ dialogSetupYourMacCMD="$dialogBinary \
 --messagefont 'size=14' \
 --height '780' \
 --position 'centre' \
---blurscreen \
 --ontop \
 --overlayicon \"$overlayicon\" \
 --quitkey k \
@@ -790,87 +756,161 @@ function policyJSONConfiguration() {
             policyJSON='
             {
                 "steps": [
+                    
                     {
                         "listitem": "Rosetta",
-                        "icon": "8bac19160fabb0c8e7bac97b37b51d2ac8f38b7100b6357642d9505645d37b52",
+                            "icon": "8bac19160fabb0c8e7bac97b37b51d2ac8f38b7100b6357642d9505645d37b52",
                         "progresstext": "Rosetta enables a Mac with Apple silicon to use apps built for a Mac with an Intel processor.",
                         "trigger_list": [
                             {
-                                "trigger": "rosettaInstall",
+                                "trigger": "install_rosetta",
                                 "validation": "None"
                             },
                             {
-                                "trigger": "rosetta",
+                                "trigger": "install_rosetta",
+                                "validation": "Local"
+                            }            
+                        ]
+                    },
+                    
+                    {
+                        "listitem": "Code42",
+                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "progresstext": "Install the EC Data Protection and Backup Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "'install_code42_${type}'",
+                                "validation": "/Applications/Code42.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Crowdstrike Falcon",
+                        "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
+                        "progresstext": "Install The Computer Security Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_crowdstrike",
+                                "validation": "/Applications/Falcon.app/Contents/Info.plist"
+                            }
+                        ]
+                    },        {
+                        "listitem": "Enable Filevault 2",
+                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "progresstext": "Install and Configure macOS FileVault 2.",
+                        "trigger_list": [
+                            {
+                                "trigger": "enable_filevault",
                                 "validation": "Local"
                             }
                         ]
                     },
                     {
-                        "listitem": "FileVault Disk Encryption",
-                        "icon": "f9ba35bd55488783456d64ec73372f029560531ca10dfa0e8154a46d7732b913",
-                        "progresstext": "FileVault is built-in to macOS and provides full-disk encryption to help prevent unauthorized access to your Mac.",
+                        "listitem": "Microsoft Office 365",
+                        "icon": "66e495c8ac8f827b600b4bd78976b4e023650791f5bcdcd90e08a4d01a2a469f",
+                        "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
                         "trigger_list": [
                             {
-                                "trigger": "filevault",
+                                "trigger": "install_365",
+                                "validation": "/Applications/Microsoft Outlook.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Zoom",
+                        "icon": "be66420495a3f2f1981a49a0e0ad31783e9a789e835b4196af60554bf4c115ac",
+                        "progresstext": "Zoom is a videotelephony software program developed by Zoom Video Communications.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_zoom",
+                                "validation": "/Applications/zoom.us.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Google Chrome",
+                        "icon": "12d3d198f40ab2ac237cff3b5cb05b09f7f26966d6dffba780e4d4e5325cc701",
+                        "progresstext": "Browse the Internet with ease",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_google_chrome",
+                                "validation": "/Applications/Google Chrome.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Mozilla Firefox",
+                        "icon": "7fb08d1490912402809f42c8a466a096a09ece0a6de68fa83265ea745498912d",
+                        "progresstext": "Browse the Internet with ease",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_mozilla_firefox",
+                                "validation": "/Applications/Firefox.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    
+                    {
+                        "listitem": "Slack",
+                        "icon": "a1ecbe1a4418113177cc061def4996d20a01a1e9b9adf9517899fcca31f3c026",
+                        "progresstext": "Install Slack Messaging System",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_slack",
+                                "validation": "/Applications/Slack.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Google Drive",
+                        "icon": "a6954a50da661bd785407e23f83c6a1ac27006180eae1813086e64f4d6e65dcc",
+                        "progresstext": "The Preferred Cloud Storage Of The Collective.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_google_drive",
+                                "validation": "/Applications/Google Drive.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Conditional Access Tool",
+                        "icon": "7a97c3926c07d26c111a1f5c3d11fcaeb8471f6046e7b289d67bac74669f916a",
+                        "progresstext": "Ensure that Collective data is accessed by approved devices.",
+                        "trigger_list": [
+                            {
+                                "trigger": "'okta_cba_${cpu}'",
                                 "validation": "Local"
                             }
                         ]
                     },
                     {
-                        "listitem": "Sophos Endpoint",
-                        "icon": "c70f1acf8c96b99568fec83e165d2a534d111b0510fb561a283d32aa5b01c60c",
-                        "progresstext": "You’ll enjoy next-gen protection with Sophos Endpoint which doesn’t rely on signatures to catch malware.",
+                        "listitem": "Crowdstrike Running Validation",
+                        "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
+                        "progresstext": "Verify that the Crowdstrike Falcon agent is running",
                         "trigger_list": [
                             {
-                                "trigger": "sophosEndpoint",
-                                "validation": "/Applications/Sophos/Sophos Endpoint.app/Contents/Info.plist"
-                            }
-                        ]
-                    },
-                    {
-                        "listitem": "Sophos Endpoint Services (Remote)",
-                        "icon": "c05d087189f0b25a94f02eeb43b0c5c928e5e378f2168f603554bce2b5c71209",
-                        "progresstext": "Remotely validating Sophos Endpoint services …",
-                        "trigger_list": [
-                            {
-                                "trigger": "symvSophosEndpointRTS",
+                                "trigger": "crowdstrike_validation",
                                 "validation": "Remote"
                             }
                         ]
+                        
                     },
                     {
-                        "listitem": "Palo Alto GlobalProtect",
-                        "icon": "ea794c5a1850e735179c7c60919e3b51ed3ed2b301fe3f0f27ad5ebd394a2e4b",
-                        "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
+                        "listitem": "Code42 Running Validation",
+                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "progresstext": "Verify that the Code42 agent is running",
                         "trigger_list": [
                             {
-                                "trigger": "globalProtect",
-                                "validation": "/Applications/GlobalProtect.app/Contents/Info.plist"
-                            }
-                        ]
-                    },
-                    {
-                        "listitem": "Palo Alto GlobalProtect Services (Remote)",
-                        "icon": "709e8bdf0019e8faf9df85ec0a68545bfdb8bfa1227ac9bed9bba40a1fa8ff42",
-                        "progresstext": "Remotely validating Palo Alto GlobalProtect services …",
-                        "trigger_list": [
-                            {
-                                "trigger": "symvGlobalProtect",
+                                "trigger": "code42_validate",
                                 "validation": "Remote"
                             }
                         ]
+                        
                     },
                     {
-                        "listitem": "Final Configuration",
-                        "icon": "4723e3e341a7e11e6881e418cf91b157fcc081bdb8948697750e5da3562df728",
-                        "progresstext": "Finalizing Configuration …",
+                        "listitem": "Re-name Computer",
+                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "progresstext": "A listing of your Mac’s apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
                         "trigger_list": [
                             {
-                                "trigger": "finalConfiguration",
-                                "validation": "None"
-                            },
-                            {
-                                "trigger": "reconAtReboot",
+                                "trigger": "rename_computer",
                                 "validation": "None"
                             }
                         ]
@@ -1204,92 +1244,189 @@ function policyJSONConfiguration() {
             policyJSON='
             {
                 "steps": [
+                    
                     {
                         "listitem": "Rosetta",
                         "icon": "8bac19160fabb0c8e7bac97b37b51d2ac8f38b7100b6357642d9505645d37b52",
                         "progresstext": "Rosetta enables a Mac with Apple silicon to use apps built for a Mac with an Intel processor.",
                         "trigger_list": [
                             {
-                                "trigger": "rosettaInstall",
+                                "trigger": "install_rosetta",
                                 "validation": "None"
                             },
                             {
-                                "trigger": "rosetta",
+                                "trigger": "install_rosetta",
+                                "validation": "Local"
+                            }            
+                        ]
+                    },
+                    
+                    {
+                        "listitem": "Code42 Backup Software",
+                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "progresstext": "Install the EC Backup Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_code42",
+                                "validation": "/Applications/Code42.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Code42 Data Loss Prevention Software",
+                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "progresstext": "Install the EC Data Loss Protection Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_incydr",
+                                "validation": "/Applications/Code42-AAT.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Crowdstrike Falcon",
+                        "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
+                        "progresstext": "Install The Computer Security Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_crowdstrike",
+                                "validation": "/Applications/Falcon.app/Contents/Info.plist"
+                            }
+                        ]
+                    },        {
+                        "listitem": "Enable Filevault 2",
+                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "progresstext": "Install and Configure macOS FileVault 2.",
+                        "trigger_list": [
+                            {
+                                "trigger": "enable_filevault",
                                 "validation": "Local"
                             }
                         ]
                     },
                     {
-                        "listitem": "FileVault Disk Encryption",
-                        "icon": "f9ba35bd55488783456d64ec73372f029560531ca10dfa0e8154a46d7732b913",
-                        "progresstext": "FileVault is built-in to macOS and provides full-disk encryption to help prevent unauthorized access to your Mac.",
+                        "listitem": "Microsoft Office 365",
+                        "icon": "66e495c8ac8f827b600b4bd78976b4e023650791f5bcdcd90e08a4d01a2a469f",
+                        "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
                         "trigger_list": [
                             {
-                                "trigger": "filevault",
+                                "trigger": "install_365",
+                                "validation": "/Applications/Microsoft Outlook.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Zoom",
+                        "icon": "be66420495a3f2f1981a49a0e0ad31783e9a789e835b4196af60554bf4c115ac",
+                        "progresstext": "Zoom is a videotelephony software program developed by Zoom Video Communications.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_zoom",
+                                "validation": "/Applications/zoom.us.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Google Chrome",
+                        "icon": "12d3d198f40ab2ac237cff3b5cb05b09f7f26966d6dffba780e4d4e5325cc701",
+                        "progresstext": "Browse the Internet with ease",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_google_chrome",
+                                "validation": "/Applications/Google Chrome.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Mozilla Firefox",
+                        "icon": "7fb08d1490912402809f42c8a466a096a09ece0a6de68fa83265ea745498912d",
+                        "progresstext": "Browse the Internet with ease",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_mozilla_firefox",
+                                "validation": "/Applications/Firefox.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    
+                    {
+                        "listitem": "Slack",
+                        "icon": "a1ecbe1a4418113177cc061def4996d20a01a1e9b9adf9517899fcca31f3c026",
+                        "progresstext": "Install Slack Messaging System",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_slack",
+                                "validation": "/Applications/Slack.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Google Drive",
+                        "icon": "a6954a50da661bd785407e23f83c6a1ac27006180eae1813086e64f4d6e65dcc",
+                        "progresstext": "The Preferred Cloud Storage Of The Collective.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_google_drive",
+                                "validation": "/Applications/Google Drive.app/Contents/Info.plist"
+                            }
+                        ]
+                    },{
+                        "listitem": "Conditional Access Tool",
+                        "icon": "7a97c3926c07d26c111a1f5c3d11fcaeb8471f6046e7b289d67bac74669f916a",
+                        "progresstext": "Ensure that Collective data is accessed by approved devices.",
+                        "trigger_list": [
+                            {
+                                "trigger": "'okta_cba_${type}'",
                                 "validation": "Local"
                             }
                         ]
                     },
                     {
-                        "listitem": "Sophos Endpoint",
-                        "icon": "c70f1acf8c96b99568fec83e165d2a534d111b0510fb561a283d32aa5b01c60c",
-                        "progresstext": "You’ll enjoy next-gen protection with Sophos Endpoint which doesn’t rely on signatures to catch malware.",
+                        "listitem": "Crowdstrike Running Validation",
+                        "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
+                        "progresstext": "Verify that the Crowdstrike Falcon agent is running",
                         "trigger_list": [
                             {
-                                "trigger": "sophosEndpoint",
-                                "validation": "/Applications/Sophos/Sophos Endpoint.app/Contents/Info.plist"
-                            },
-                            {
-                                "trigger": "symvSophosEndpointRTS",
+                                "trigger": "crowdstrike_validation",
                                 "validation": "Remote"
                             }
                         ]
+                        
                     },
                     {
-                        "listitem": "Palo Alto GlobalProtect",
-                        "icon": "ea794c5a1850e735179c7c60919e3b51ed3ed2b301fe3f0f27ad5ebd394a2e4b",
-                        "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
+                        "listitem": "Code42 Running Validation",
+                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "progresstext": "Verify that the Code42 agent is running",
                         "trigger_list": [
                             {
-                                "trigger": "globalProtect",
-                                "validation": "/Applications/GlobalProtect.app/Contents/Info.plist"
-                            },
-                            {
-                                "trigger": "symvGlobalProtect",
+                                "trigger": "code42_validate",
                                 "validation": "Remote"
                             }
                         ]
+                        
                     },
                     {
-                        "listitem": "Final Configuration",
-                        "icon": "4723e3e341a7e11e6881e418cf91b157fcc081bdb8948697750e5da3562df728",
-                        "progresstext": "Finalizing Configuration …",
-                        "trigger_list": [
-                            {
-                                "trigger": "finalConfiguration",
-                                "validation": "None"
-                            },
-                            {
-                                "trigger": "reconAtReboot",
-                                "validation": "None"
-                            }
-                        ]
-                    },
-                    {
-                        "listitem": "Computer Inventory",
-                        "icon": "ff2147a6c09f5ef73d1c4406d00346811a9c64c0b6b7f36eb52fcb44943d26f9",
+                        "listitem": "Re-name Computer",
+                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
                         "progresstext": "A listing of your Mac’s apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
                         "trigger_list": [
                             {
-                                "trigger": "recon",
-                                "validation": "recon"
+                                "trigger": "rename_computer",
+                                "validation": "None"
                             }
                         ]
-                    }
-                ]
+                    },                    {
+                        "listitem": "Complete Computer Setup",
+                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
+                        "progresstext": "Mark the setup process as complete and run a full inventory",
+                        "trigger_list": [
+                            {
+                                "trigger": "setup_complete",
+                                "validation": "/Library/Preferences/com.ec.plist"
+                            }
+                        ]
+                    }                ]
             }
             '
-            ;;
+        ;;
 
     esac
 
@@ -1513,10 +1650,9 @@ function finalise(){
             dialogUpdateSetupYourMac "button1text: Continue …"
             dialogUpdateSetupYourMac "button1: enable"
             dialogUpdateSetupYourMac "progress: reset"
-            
-
-            # Wait for user-acknowledgment due to detected failure
-            wait
+        dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}.  \n\nPlease complete the following steps:\n1. Reboot and login to your Mac  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the IT Team at ithelp@emersoncollective.com. "
+        dialogUpdateFailure "icon: SF=xmark.circle.fill,weight=bold,colour1=#BB1717,colour2=#F31F1F"
+        dialogUpdateFailure "button1text: ${button1textCompletionActionOption}"
 
             dialogUpdateSetupYourMac "quit:"
             eval "${dialogFailureCMD}" & sleep 0.3
@@ -2346,7 +2482,8 @@ function webHookMessage() {
         }
 EOF
 )
-
+        
+        
         # Send the message to Slack
         updateScriptLog "Send the message to Slack …"
         updateScriptLog "${webHookdata}"
@@ -2359,24 +2496,24 @@ EOF
         
     else
         
-        updateScriptLog "Generating Microsoft Teams Message …"
+    updateScriptLog "Generating Microsoft Teams Message …"
 
-        # Jamf Pro URL
-        jamfProURL=$(/usr/bin/defaults read /Library/Preferences/com.jamfsoftware.jamf.plist jss_url)
-        
-        # Jamf Pro URL for on-prem, multi-node, clustered environments
-        # case ${jamfProURL} in
-        #     *"beta"*    ) jamfProURL="https://jamfpro-beta.internal.company.com/" ;;
-        #     *           ) jamfProURL="https://jamfpro-prod.internal.company.com/" ;;
-        # esac
+    # Jamf Pro URL
+    jamfProURL=$(/usr/bin/defaults read /Library/Preferences/com.jamfsoftware.jamf.plist jss_url)
+    
+    # Jamf Pro URL for on-prem, multi-node, clustered environments
+    # case ${jamfProURL} in
+    #     *"beta"*    ) jamfProURL="https://jamfpro-beta.internal.company.com/" ;;
+    #     *           ) jamfProURL="https://jamfpro-prod.internal.company.com/" ;;
+    # esac
 
-        # URL to computer object
-        jamfProComputerURL="${jamfProURL}computers.html?id=${computerID}&o=r"
+    # URL to computer object
+    jamfProComputerURL="${jamfProURL}computers.html?id=${computerID}&o=r"
 
-        # URL to an image to add to your notification
-        activityImage="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/78010/old-mac-computer-clipart-md.png"
+    # URL to an image to add to your notification
+    activityImage="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/78010/old-mac-computer-clipart-md.png"
 
-        webHookdata=$(cat <<EOF
+    webHookdata=$(cat <<EOF
 {
     "@type": "MessageCard",
     "@context": "http://schema.org/extensions",
@@ -2422,6 +2559,7 @@ EOF
 EOF
 )
 
+
     # Send the message to Microsoft Teams
     updateScriptLog "Send the message Microsoft Teams …"
     updateScriptLog "${webHookdata}"
@@ -2437,7 +2575,6 @@ EOF
     fi
     
 }
-
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
