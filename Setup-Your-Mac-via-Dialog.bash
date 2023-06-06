@@ -66,108 +66,31 @@
 # Script Version and Jamf Pro Script Parameters
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 scriptVersion="1.9.0"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                    # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
 debugMode="${5:-"true"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
-=======
-scriptVersion="1.10.0-rc29"
-=======
-scriptVersion="1.10.0"
-<<<<<<< HEAD
-export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
-scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                    # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
-export PATH=/usr/bin:/bin:/usr/sbin:/sbin
-scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
-debugMode="${5:-"false"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
-welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
-
-completionActionOption="${7:-"wait"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
-=======
->>>>>>> f36433aea999eba83c98dbe5a532380c7283f3aa
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 scriptLog="${4:-"/var/log/org.churchofjesuschrist.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
 debugMode="${5:-"verbose"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"userInput"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
->>>>>>> f0fc60c37a76b3c76d95f77c133791161eb4c8fd
 completionActionOption="${7:-"Restart Attended"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
->>>>>>> 4ec2c7ace4823e2a4568cbba8ce719f69a6915d1
 requiredMinimumBuild="${8:-"disabled"}"                                         # Parameter 8: Required Minimum Build [ disabled (default) | 22E ] (i.e., Your organization's required minimum build of macOS to allow users to proceed; use "22E" for macOS 13.3)
 outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     # Parameter 9: Outdated OS Action [ /System/Library/CoreServices/Software Update.app (default) | jamfselfservice://content?entity=policy&id=117&action=view ] (i.e., Jamf Pro Self Service policy ID for operating system ugprades)
 webhookURL="${10:-""}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
-
+presetConfiguration="${11:-""}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: Only used when `welcomeDialog` is set to `video` or `false`)
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-<<<<<<< HEAD
 # Operating System, cpu, currently logged-in user and default Exit Code
-=======
-<<<<<<< HEAD
-# Operating System, cpu, currently logged-in user and default Exit Code
-=======
-# Various Feature Variables
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-debugModeSleepAmount="3"    # Delay for various actions when running in Debug Mode
-failureDialog="true"        # Display the so-called "Failure" dialog (after the main SYM dialog) [ true | false ]
-
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Welcome Message User Input Customization Choices (thanks, @rougegoat!)
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# These control which user input boxes are added to the first page of Setup Your Mac. If you do not want to ask about a value, set it to any other value
-promptForUsername="true"
-prefillUsername="true"          # prefills the currently logged in user's username
-promptForComputerName="true"
-promptForAssetTag="true"
-promptForRoom="true"
-promptForConfiguration="true"   # Removes the Configuration dropdown entirely and uses the "Catch-all (i.e., used when `welcomeDialog` is set to `video` or `false`)" policyJSON
-
-# Disables the Blurscreen enabled by default in Production
-moveableInProduction="false"
-
-# An unsorted, comma-separated list of buildings (with possible duplication). If empty, this will be hidden from the user info prompt
-buildingsListRaw="Benson (Ezra Taft) Building,Brimhall (George H.) Building,BYU Conference Center,Centennial Carillon Tower,Chemicals Management Building,Clark (Herald R.) Building,Clark (J. Reuben) Building,Clyde (W.W.) Engineering Building,Crabtree (Roland A.) Technology Building,Ellsworth (Leo B.) Building,Engineering Building,Eyring (Carl F.) Science Center,Grant (Heber J.) Building,Harman (Caroline Hemenway) Building,Harris (Franklin S.) Fine Arts Center,Johnson (Doran) House East,Kimball (Spencer W.) Tower,Knight (Jesse) Building,Lee (Harold B.) Library,Life Sciences Building,Life Sciences Greenhouses,Maeser (Karl G.) Building,Martin (Thomas L.) Building,McKay (David O.) Building,Nicholes (Joseph K.) Building,Smith (Joseph F.) Building,Smith (Joseph) Building,Snell (William H.) Building,Talmage (James E.) Math Sciences/Computer Building,Tanner (N. Eldon) Building,Taylor (John) Building,Wells (Daniel H.) Building"
-
-# A sorted, unique, JSON-compatible list of buildings
-buildingsList=$( echo "${buildingsListRaw}" | tr ',' '\n' | sort -f | uniq | sed -e 's/^/\"/' -e 's/$/\",/' -e '$ s/.$//' )
-
-# An unsorted, comma-separated list of departments (with possible duplication). If empty, this will be hidden from the user info prompt
-departmentListRaw="Asset Management,Sales,Australia Area Office,Purchasing / Sourcing,Board of Directors,Strategic Initiatives & Programs,Operations,Business Development,Marketing,Creative Services,Customer Service / Customer Experience,Risk Management,Engineering,Finance / Accounting,Sales,General Management,Human Resources,Marketing,Investor Relations,Legal,Marketing,Sales,Product Management,Production,Corporate Communications,Information Technology / Technology,Quality Assurance,Project Management Office,Sales,Technology"
-
-# A sorted, unique, JSON-compatible list of departments
-departmentList=$( echo "${departmentListRaw}" | tr ',' '\n' | sort -f | uniq | sed -e 's/^/\"/' -e 's/$/\",/' -e '$ s/.$//' )
-
-# Branding overrides
-brandingBanner="https://img.freepik.com/free-photo/abstract-grunge-decorative-relief-navy-blue-stucco-wall-texture-wide-angle-rough-colored-background_1258-28311.jpg"
-brandingBannerDisplayText="true"
-brandingIconLight="https://cdn-icons-png.flaticon.com/512/979/979585.png"
-brandingIconDark="https://cdn-icons-png.flaticon.com/512/740/740878.png"
-
-# IT Support Variables - Use these if the default text is fine but you want your org's info inserted instead
-supportTeamName="Help Desk"
-supportTeamPhone="+1 (801) 555-1212"
-supportTeamEmail="support@domain.org"
-supportKB="KB86753099"
-supportTeamErrorKB=", and mention [${supportKB}](https://servicenow.company.com/support?id=kb_article_view&sysparm_article=${supportKB}#Failures)"
-supportTeamHelpKB="\n- **Knowledge Base Article:** ${supportKB}"
-
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Operating System, Computer Model Name, etc.
->>>>>>> f0fc60c37a76b3c76d95f77c133791161eb4c8fd
->>>>>>> 4ec2c7ace4823e2a4568cbba8ce719f69a6915d1
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 osVersion=$( sw_vers -productVersion )
+osVersionExtra=$( sw_vers -productVersionExtra ) 
 osBuild=$( sw_vers -buildVersion )
 osMajorVersion=$( echo "${osVersion}" | awk -F '.' '{print $1}' )
+if [[ -n $osVersionExtra ]] && [[ "${osMajorVersion}" -ge 13 ]]; then osVersion="${osVersion} ${osVersionExtra}"; fi # Report RSR sub version if applicable
 modelName=$( /usr/libexec/PlistBuddy -c 'Print :0:_items:0:machine_name' /dev/stdin <<< "$(system_profiler -xml SPHardwareDataType)" )
 reconOptions=""
 exitCode="0"
@@ -203,14 +126,23 @@ else
 fi
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Configuration Download Estimation
+# Configuration Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 configurationDownloadEstimation="true"  # [ true (default) | false ]
 correctionCoefficient="1.01"            # "Fudge factor" (to help estimate match reality)
 configurationCatchAllSize="34"          # Catch-all Configuration in Gibibits (i.e., Total File Size in Gigabytes * 7.451) 
+
+configurationOneName="Required"
+configurtaionOneDescription="Minimum organization apps"
 configurationOneSize="34"               # Configuration One in Gibibits (i.e., Total File Size in Gigabytes * 7.451) 
+
+configurationTwoName="Recommended"
+configurationTwoDescription="Required apps and Microsoft Office"
 configurationTwoSize="62"               # Configuration Two in Gibibits (i.e., Total File Size in Gigabytes * 7.451) 
+
+configurationThreeName="Complete"
+configurationThreeDescription="Recommended apps, Adobe Acrobat Reader and Google Chrome"
 configurationThreeSize="106"            # Configuration Three in Gibibits (i.e., Total File Size in Gigabytes * 7.451) 
 
 
@@ -307,6 +239,32 @@ updateScriptLog "PRE-FLIGHT CHECK: Finder & Dock are running; proceeding …"
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Pre-flight Check: Validate Logged-in System Accounts
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+updateScriptLog "PRE-FLIGHT CHECK: Check for Logged-in System Accounts …"
+currentLoggedInUser
+
+counter="1"
+
+until { [[ "${loggedInUser}" != "_mbsetupuser" ]] || [[ "${counter}" -gt "180" ]]; } && { [[ "${loggedInUser}" != "loginwindow" ]] || [[ "${counter}" -gt "30" ]]; } ; do
+
+    updateScriptLog "PRE-FLIGHT CHECK: Logged-in User Counter: ${counter}"
+    currentLoggedInUser
+    sleep 2
+    ((counter++))
+
+done
+
+loggedInUserFullname=$( id -F "${loggedInUser}" )
+loggedInUserFirstname=$( echo "$loggedInUserFullname" | sed -E 's/^.*, // ; s/([^ ]*).*/\1/' | sed 's/\(.\{25\}\).*/\1…/' | awk '{print toupper(substr($0,1,1))substr($0,2)}' )
+loggedInUserID=$( id -u "${loggedInUser}" )
+updateScriptLog "PRE-FLIGHT CHECK: Current Logged-in User First Name: ${loggedInUserFirstname}"
+updateScriptLog "PRE-FLIGHT CHECK: Current Logged-in User ID: ${loggedInUserID}"
+
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Pre-flight Check: Validate Operating System Version and Build
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -358,32 +316,6 @@ fi
 
 updateScriptLog "PRE-FLIGHT CHECK: Caffeinating this script (PID: $$)"
 caffeinate -dimsu -w $$ &
-
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Pre-flight Check: Validate Logged-in System Accounts
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-updateScriptLog "PRE-FLIGHT CHECK: Check for Logged-in System Accounts …"
-currentLoggedInUser
-
-counter="1"
-
-until { [[ "${loggedInUser}" != "_mbsetupuser" ]] || [[ "${counter}" -gt "180" ]]; } && { [[ "${loggedInUser}" != "loginwindow" ]] || [[ "${counter}" -gt "30" ]]; } ; do
-
-    updateScriptLog "PRE-FLIGHT CHECK: Logged-in User Counter: ${counter}"
-    currentLoggedInUser
-    sleep 2
-    ((counter++))
-
-done
-
-loggedInUserFullname=$( id -F "${loggedInUser}" )
-loggedInUserFirstname=$( echo "$loggedInUserFullname" | sed -E 's/^.*, // ; s/([^ ]*).*/\1/' | sed 's/\(.\{25\}\).*/\1…/' | awk '{print toupper(substr($0,1,1))substr($0,2)}' )
-loggedInUserID=$( id -u "${loggedInUser}" )
-updateScriptLog "PRE-FLIGHT CHECK: Current Logged-in User First Name: ${loggedInUserFirstname}"
-updateScriptLog "PRE-FLIGHT CHECK: Current Logged-in User ID: ${loggedInUserID}"
 
 
 
@@ -571,23 +503,16 @@ jamfBinary="/usr/local/bin/jamf"
 # "Welcome" dialog Title, Message and Icon
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 4ec2c7ace4823e2a4568cbba8ce719f69a6915d1
 welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname} and welcome to your new Mac!"
 welcomeMessage="Please enter your Mac's **Asset Tag**, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac.  \n\nOnce completed, the **Wait** button will be enabled and you'll be able to review the results before restarting your Mac.  \n\nIf you need assistance, please contact the IT Team at ithelp@emersoncollective.com.  \n\n---  \n\n#### Configurations  \n- **Required:** Minimum organization apps  \n- **Recommended:** Required apps and Microsoft Office  \n- **Complete:** Recommended apps, Adobe Acrobat Reader and Google Chrome"
 welcomeBannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
 welcomeBannerText="Happy $( date +'%A' ), ${loggedInUserFirstname} and welcome to your new Mac!"
-<<<<<<< HEAD
-=======
-=======
 welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}"
 
 welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}. \n\nIf you need assistance, please contact the ${supportTeamName}: ${supportTeamPhone} and mention ${supportKB}. \n\n---"
 
 if [[ "${promptForConfiguration}" == "true" ]]; then
-    welcomeMessage+="  \n\n#### Configurations  \n- **Required:** Minimum organization apps  \n- **Recommended:** Required apps and Microsoft Office  \n- **Complete:** Recommended apps, Adobe Acrobat Reader and Google Chrome"
+    welcomeMessage+="  \n\n#### Configurations  \n- **${configurationOneName}:** ${configurtaionOneDescription}  \n- **${configurationTwoName}:** ${configurationTwoDescription}  \n- **${configurationThreeName}:** ${configurationThreeDescription}"
 else
     welcomeMessage=${welcomeMessage//", select your preferred **Configuration**"/}
 fi
@@ -600,8 +525,6 @@ else
 fi
 if [[ "${brandingBannerDisplayText}" == "true" ]]; then welcomeBannerText="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}";
 else welcomeBannerText=""; fi
->>>>>>> f0fc60c37a76b3c76d95f77c133791161eb4c8fd
->>>>>>> 4ec2c7ace4823e2a4568cbba8ce719f69a6915d1
 welcomeCaption="Please review the above video, then click Continue."
 welcomeVideoID="vimeoid=821866488"
 
@@ -665,34 +588,41 @@ textFieldJSON="${usernameJSON}${compNameJSON}${assetTagJSON}${roomJSON}"
 textFieldJSON=$( echo ${textFieldJSON} | sed 's/,$//' )
 
 # Dropdowns
-if [ -n "$buildingsListRaw" ]; then
+if [ "$promptForBuilding" == "true" ]; then
+    if [ -n "$buildingsListRaw" ]; then
     buildingJSON='{
             "title" : "Building",
-            "default" : "Please select your building",
+            "default" : "",
+            "required" : true,
             "values" : [
-                "Please select your building",
                 '${buildingsList}'
             ]
         },'
+    fi
 fi
 
-if [ -n "$departmentListRaw" ]; then
-    departmentJSON='{   "title" : "Department",
-            "default" : "Please select your department",
+if [ "$promptForDepartment" == "true" ]; then
+    if [ -n "$departmentListRaw" ]; then
+    departmentJSON='{
+            "title" : "Department",
+            "default" : "",
+            "required" : true,
             "values" : [
-                "Please select your department",
                 '${departmentList}'
             ]
         },'
+    fi
 fi
 
 if [ "$promptForConfiguration" == "true" ]; then
-    configurationJSON='{ "title" : "Configuration",
-            "default" : "Required",
+    configurationJSON='{
+            "title" : "Configuration",
+            "style" : "radio",
+            "default" : "'"${configurationOneName}"'",
             "values" : [
-                "Required",
-                "Recommended",
-                "Complete"
+                "'"${configurationOneName}"'",
+                "'"${configurationTwoName}"'",
+                "'"${configurationThreeName}"'"
             ]
         }'
 fi
@@ -729,7 +659,7 @@ welcomeJSON='
     "selectitems" : [
         '${selectItemsJSON}'
     ],
-    "height" : "750"
+    "height" : "860"
 }
 '
 
@@ -747,16 +677,12 @@ welcomeJSON='
 
 title="Setting up ${loggedInUserFirstname}‘s ${modelName}"
 message="Please wait while the following apps are installed …"
-<<<<<<< HEAD
 bannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
 bannerText="Setting up ${loggedInUserFirstname}'s Mac"
 helpmessage="If you need assistance, please contact the IT Team  \n- **Email:** ithelp@emersoncollective.com  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
-=======
-<<<<<<< HEAD
 bannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
 bannerText="Setting up ${loggedInUserFirstname}'s Mac"
 helpmessage="If you need assistance, please contact the IT Team  \n- **Email:** ithelp@emersoncollective.com  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
-=======
 if [[ -n "${brandingBanner}" ]]; then
     bannerImage="${brandingBanner}"
 else
@@ -766,8 +692,6 @@ if [[ "${brandingBannerDisplayText}" == "true" ]] ; then bannerText="Setting up 
 else bannerText=""; fi
 
 helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n- **Telephone:** ${supportTeamPhone}  \n- **Email:** ${supportTeamEmail}  ${supportTeamHelpKB}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
->>>>>>> f0fc60c37a76b3c76d95f77c133791161eb4c8fd
->>>>>>> 4ec2c7ace4823e2a4568cbba8ce719f69a6915d1
 infobox="Analyzing input …" # Customize at "Update Setup Your Mac's infobox"
 
 # Check if the custom bannerImage is available, and if not, use a alternative image
@@ -876,7 +800,7 @@ function policyJSONConfiguration() {
 
     case ${symConfiguration} in
 
-        "Required" )
+        "${configurationOneName}" )
 
             policyJSON='
             {
@@ -1056,7 +980,7 @@ function policyJSONConfiguration() {
             '
             ;;
 
-        "Recommended" )
+        "${configurationTwoName}" )
 
             policyJSON='
             {
@@ -1188,7 +1112,7 @@ function policyJSONConfiguration() {
             '
             ;;
 
-        "Complete" )
+        "${configurationThreeName}" )
 
             policyJSON='
             {
@@ -1534,18 +1458,12 @@ function policyJSONConfiguration() {
                         "progresstext": "A listing of your Mac’s apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
                         "trigger_list": [
                             {
-<<<<<<< HEAD
                                 "trigger": "rename_computer",
                                 "validation": "None"
-=======
-<<<<<<< HEAD
                                 "trigger": "rename_computer",
                                 "validation": "None"
-=======
                                 "trigger": "recon",
                                 "validation": "recon"
->>>>>>> f0fc60c37a76b3c76d95f77c133791161eb4c8fd
->>>>>>> 4ec2c7ace4823e2a4568cbba8ce719f69a6915d1
                             }
                         ]
                     },                    {
@@ -1785,22 +1703,17 @@ function finalise(){
             dialogUpdateSetupYourMac "button1text: Continue …"
             dialogUpdateSetupYourMac "button1: enable"
             dialogUpdateSetupYourMac "progress: reset"
-<<<<<<< HEAD
         dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}.  \n\nPlease complete the following steps:\n1. Reboot and login to your Mac  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the IT Team at ithelp@emersoncollective.com. "
         dialogUpdateFailure "icon: SF=xmark.circle.fill,weight=bold,colour1=#BB1717,colour2=#F31F1F"
         dialogUpdateFailure "button1text: ${button1textCompletionActionOption}"
-=======
-            
 
-<<<<<<< HEAD
+        
         dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}.  \n\nPlease complete the following steps:\n1. Reboot and login to your Mac  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the IT Team at ithelp@emersoncollective.com. "
         dialogUpdateFailure "icon: SF=xmark.circle.fill,weight=bold,colour1=#BB1717,colour2=#F31F1F"
         dialogUpdateFailure "button1text: ${button1textCompletionActionOption}"
-=======
+
             # Wait for user-acknowledgment due to detected failure
             wait
->>>>>>> f0fc60c37a76b3c76d95f77c133791161eb4c8fd
->>>>>>> 4ec2c7ace4823e2a4568cbba8ce719f69a6915d1
 
             dialogUpdateSetupYourMac "quit:"
             eval "${dialogFailureCMD}" & sleep 0.3
@@ -2496,7 +2409,7 @@ function checkNetworkQualityConfigurations() {
     updateScriptLog "WELCOME DIALOG: Configuration Three Estimate: $(printf '%dh:%dm:%ds\n' $((configurationThreeEstimatedSeconds/3600)) $((configurationThreeEstimatedSeconds%3600/60)) $((configurationThreeEstimatedSeconds%60)))"
 
     updateScriptLog "WELCOME DIALOG: Network Quality Test: Started: $dlStartDate, Ended: $dlEndDate; Download: $mbps Mbps, Responsiveness: $dlResponsiveness"
-    dialogUpdateWelcome "infobox: **Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimates (beta):**  \n- Required:  \n$(printf '%dh:%dm:%ds\n' $((configurationOneEstimatedSeconds/3600)) $((configurationOneEstimatedSeconds%3600/60)) $((configurationOneEstimatedSeconds%60)))  \n\n- Recommended:  \n$(printf '%dh:%dm:%ds\n' $((configurationTwoEstimatedSeconds/3600)) $((configurationTwoEstimatedSeconds%3600/60)) $((configurationTwoEstimatedSeconds%60)))  \n\n- Complete:  \n$(printf '%dh:%dm:%ds\n' $((configurationThreeEstimatedSeconds/3600)) $((configurationThreeEstimatedSeconds%3600/60)) $((configurationThreeEstimatedSeconds%60)))"
+    dialogUpdateWelcome "infobox: **Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimates:**  \n- ${configurationOneName}:  \n$(printf '%dh:%dm:%ds\n' $((configurationOneEstimatedSeconds/3600)) $((configurationOneEstimatedSeconds%3600/60)) $((configurationOneEstimatedSeconds%60)))  \n\n- ${configurationTwoName}:  \n$(printf '%dh:%dm:%ds\n' $((configurationTwoEstimatedSeconds/3600)) $((configurationTwoEstimatedSeconds%3600/60)) $((configurationTwoEstimatedSeconds%60)))  \n\n- ${configurationThreeName}:  \n$(printf '%dh:%dm:%ds\n' $((configurationThreeEstimatedSeconds/3600)) $((configurationThreeEstimatedSeconds%3600/60)) $((configurationThreeEstimatedSeconds%60)))"
 
 }
 
@@ -2547,7 +2460,7 @@ function checkNetworkQualityCatchAllConfiguration() {
     updateScriptLog "SETUP YOUR MAC DIALOG: Catch-all Configuration Estimate: $(printf '%dh:%dm:%ds\n' $((configurationCatchAllEstimatedSeconds/3600)) $((configurationCatchAllEstimatedSeconds%3600/60)) $((configurationCatchAllEstimatedSeconds%60)))"
 
     updateScriptLog "SETUP YOUR MAC DIALOG: Network Quality Test: Started: $dlStartDate, Ended: $dlEndDate; Download: $mbps Mbps, Responsiveness: $dlResponsiveness"
-    dialogUpdateSetupYourMac "infobox: **Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimates (beta):**  \n- $(printf '%dh:%dm:%ds\n' $((configurationCatchAllEstimatedSeconds/3600)) $((configurationCatchAllEstimatedSeconds%3600/60)) $((configurationCatchAllEstimatedSeconds%60)))"
+    dialogUpdateSetupYourMac "infobox: **Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimates:**  \n- $(printf '%dh:%dm:%ds\n' $((configurationCatchAllEstimatedSeconds/3600)) $((configurationCatchAllEstimatedSeconds%3600/60)) $((configurationCatchAllEstimatedSeconds%60)))"
 
 }
 
@@ -2561,12 +2474,24 @@ function webHookMessage() {
 
     outputLineNumberInVerboseDebugMode
 
+    jamfProURL=$(/usr/bin/defaults read /Library/Preferences/com.jamfsoftware.jamf.plist jss_url)
+
+    # # Jamf Pro URL for on-prem, multi-node, clustered environments
+    # case ${jamfProURL} in
+    #     *"beta"*    ) jamfProURL="https://jamfpro-beta.internal.company.com/" ;;
+    #     *           ) jamfProURL="https://jamfpro-prod.internal.company.com/" ;;
+    # esac
+
+    jamfProComputerURL="${jamfProURL}computers.html?id=${computerID}&o=r"
+
+    # If there aren't any failures, use "None" for the value of `jamfProPolicyNameFailures`
+    if [[ -z "${jamfProPolicyNameFailures}" ]]; then
+        jamfProPolicyNameFailures="None"
+    fi
+
     if [[ $webhookURL == *"slack"* ]]; then
         
         updateScriptLog "Generating Slack Message …"
-
-        jamfProURL=$(/usr/bin/defaults read /Library/Preferences/com.jamfsoftware.jamf.plist jss_url)
-        jamfProComputerURL="${jamfProURL}computers.html?id=${computerID}&o=r"
         
         webHookdata=$(cat <<EOF
         {
@@ -2818,22 +2743,20 @@ fi
 
 if [[ "${welcomeDialog}" == "video" ]]; then
 
-    updateScriptLog "WELCOME DIALOG: Displaying "
+    updateScriptLog "WELCOME DIALOG: Displaying ${welcomeVideoID} …"
     eval "${dialogBinary} --args ${welcomeVideo}"
 
     outputLineNumberInVerboseDebugMode
-    symConfiguration="Catch-all (video)"
+    if [[ -n "${presetConfiguration}" ]]; then
+        symConfiguration="${presetConfiguration}"
+    else
+        symConfiguration="Catch-all (video)"
+    fi
+    updateScriptLog "WELCOME DIALOG: Using ${symConfiguration} Configuration …"
     policyJSONConfiguration
 
     eval "${dialogSetupYourMacCMD[*]}" & sleep 0.3
-    dialogSetupYourMacProcessID=$!
-    until pgrep -q -x "Dialog"; do
-        outputLineNumberInVerboseDebugMode
-        updateScriptLog "WELCOME DIALOG: Waiting to display 'Setup Your Mac' dialog; pausing"
-        sleep 0.5
-    done
-    updateScriptLog "WELCOME DIALOG: 'Setup Your Mac' dialog displayed; ensure it's the front-most app"
-    runAsUser osascript -e 'tell application "Dialog" to activate'
+    dialogUpdateSetupYourMac "activate:"
 
 elif [[ "${welcomeDialog}" == "userInput" ]]; then
 
@@ -2853,7 +2776,6 @@ elif [[ "${welcomeDialog}" == "userInput" ]]; then
         echo "$welcomeJSON" > "$welcomeJSONFile"
 
         updateScriptLog "WELCOME DIALOG: Display 'Welcome' dialog …"
-        # welcomeResults=$( eval "${dialogBinary} --jsonfile ${welcomeJSONFile} --json" )
         welcomeResults=$( eval "${dialogBinary} --jsonfile ${welcomeJSONFile} --json" )
 
     else
@@ -3033,7 +2955,12 @@ else
     ###
 
     outputLineNumberInVerboseDebugMode
-    symConfiguration="Catch-all ('Welcome' dialog disabled)"
+    if [[ -n "$presetConfiguration" ]]; then
+        symConfiguration="${presetConfiguration}"
+    else
+        symConfiguration="Catch-all ('Welcome' dialog disabled)"
+    fi
+    updateScriptLog "WELCOME DIALOG: Using ${symConfiguration} Configuration …"
     policyJSONConfiguration
 
 
@@ -3128,7 +3055,7 @@ dialogUpdateWelcome "quit:"
 
 outputLineNumberInVerboseDebugMode
 
-if [[ "${symConfiguration}" == *"Catch-all"* ]] || [[ -z "${symConfiguration}" ]]; then
+if [[ "${symConfiguration}" == *"Catch-all"* ]] || [[ -z "${symConfiguration}" ]] || [[ "${welcomeDialog}" != "userInput" ]]; then
 
     if [[ "${configurationDownloadEstimation}" == "true" ]]; then
 
@@ -3136,9 +3063,9 @@ if [[ "${symConfiguration}" == *"Catch-all"* ]] || [[ -z "${symConfiguration}" ]
 
         checkNetworkQualityCatchAllConfiguration &
 
-        updateScriptLog "SETUP YOUR MAC DIALOG: **Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimate (beta):**  \n- $(printf '%dh:%dm:%ds\n' $((configurationCatchAllEstimatedSeconds/3600)) $((configurationCatchAllEstimatedSeconds%3600/60)) $((configurationCatchAllEstimatedSeconds%60)))"
+        updateScriptLog "SETUP YOUR MAC DIALOG: **Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimate:**  \n- $(printf '%dh:%dm:%ds\n' $((configurationCatchAllEstimatedSeconds/3600)) $((configurationCatchAllEstimatedSeconds%3600/60)) $((configurationCatchAllEstimatedSeconds%60)))"
 
-        infoboxConfiguration="**Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimate (beta):**  \n- $(printf '%dh:%dm:%ds\n' $((configurationCatchAllEstimatedSeconds/3600)) $((configurationCatchAllEstimatedSeconds%3600/60)) $((configurationCatchAllEstimatedSeconds%60)))"
+        infoboxConfiguration="**Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimate:**  \n- $(printf '%dh:%dm:%ds\n' $((configurationCatchAllEstimatedSeconds/3600)) $((configurationCatchAllEstimatedSeconds%3600/60)) $((configurationCatchAllEstimatedSeconds%60)))"
 
     else
 
@@ -3164,7 +3091,12 @@ if [[ -n ${department} ]]; then infobox+="**Department:**  \n$department  \n\n" 
 if [[ -n ${building} ]]; then infobox+="**Building:**  \n$building  \n\n" ; fi
 if [[ -n ${room} ]]; then infobox+="**Room:**  \n$room  \n\n" ; fi
 
-dialogUpdateSetupYourMac "infobox: ${infobox}"
+if [[ "${promptForConfiguration}" != "true" ]] || [[ "${welcomeDialog}" == "false" ]]; then
+    updateScriptLog "SETUP YOUR MAC DIALOG: Purposely NOT updating 'infobox'"
+else
+    updateScriptLog "SETUP YOUR MAC DIALOG: Updating 'infobox'"
+    dialogUpdateSetupYourMac "infobox: ${infobox}"
+fi
 
 
 
