@@ -10,47 +10,15 @@
 #
 # HISTORY
 #
-#   Version 1.10.0, Release Date TBD, Dan K. Snelson (@dan-snelson)
-#   - 🆕 **Dynamic Download Estimates** (Addresses [Issue No. 7](https://github.com/dan-snelson/Setup-Your-Mac/issues/7); thanks for the idea, @DevliegereM; heavy-lifting provided by @bartreardon!)
-#       - Manually set `configurationDownloadEstimation` within the SYM script to `true` to enable
-#       - New `calculateFreeDiskSpace` function will record free space to `scriptLog` before and after SYM execution
-#           - Compare before and after free space values via: `grep "free" $scriptLog`
-#       - Populate the following variables, in Gibibits (i.e., Total File Size in Gigabytes * 7.451), for each Configuration:
-#           - `configurationCatchAllSize`
-#           - `configurationOneSize`
-#           - `configurationTwoSize`
-#           - `configurationThreeSize`
-#       - Specify an arbitrary value for `correctionCoefficient` (i.e., a "fudge factor" to help estimates match reality)
-#           - Validate actual elapsed time with: `grep "Elapsed" $scriptLog`
-#   - 🔥 **Breaking Change** for users of Setup Your Mac prior to `1.10.0` 🔥 
-#       - Added `recon` validation, which **must** be used when specifying the `recon` trigger (Addresses [Issue No. 19](https://github.com/dan-snelson/Setup-Your-Mac/issues/19))
-#   - Standardized formatting of `toggleJamfLaunchDaemon` function
-#       - Added logging while waiting for installation of `${jamflaunchDaemon}`
-#   - Limit the `loggedInUserFirstname` variable to `25` characters and capitalize its first letter (Addresses [Issue No. 20](https://github.com/dan-snelson/Setup-Your-Mac/issues/20); thanks @mani2care!)
-#   - Added line break to `welcomeTitle` and `welcomeBannerText`
-#   - Replaced some generic "Mac" instances with hardware-specific model name (thanks, @pico!)
-#   - Replaced `verbose` Debug Mode code with `outputLineNumberInVerboseDebugMode` function (thanks, @bartreardon!)
-#   - Removed dependency on `dialogApp`
-#   - Check `bannerImage` and `welcomeBannerImage` ([Pull Request No. 22](https://github.com/dan-snelson/Setup-Your-Mac/pull/22) AND [Pull Request No. 24](https://github.com/dan-snelson/Setup-Your-Mac/pull/24) thanks @amadotejada!)
-#   - A "raw" unsorted listing of departments — with possible duplicates — is converted to a sorted, unique, JSON-compatible `departmentList` variable (Addresses [Issue No. 23](https://github.com/dan-snelson/Setup-Your-Mac/issues/23); thanks @rougegoat!)
-#   - The selected Configuration now displays in `helpmessage` (Addresses [Issue No. 17](https://github.com/dan-snelson/Setup-Your-Mac/issues/17); thanks for the idea, @master-vodawagner!)
-#   - Disable the so-called "Failure" dialog by setting the new `failureDialog` variable to `false` (Addresses [Issue No. 25](https://github.com/dan-snelson/Setup-Your-Mac/issues/25); thanks for the idea, @DevliegereM!)
-#   - Added function to send a message to Microsoft Teams [Pull Request No. 29](https://github.com/dan-snelson/Setup-Your-Mac/pull/29); thanks @robjschroeder!)
-#   - Added Building & Room User Input, Centralize User Input settings in one area [Pull Request No. 26](https://github.com/dan-snelson/Setup-Your-Mac/pull/26) thanks @rougegoat!)
-#   - Replaced Parameter 10 with webhookURL for Microsoft Teams messaging ([Pull Request No. 31](https://github.com/dan-snelson/Setup-Your-Mac/pull/31) @robjschroeder, thanks for the idea @colorenz!!)
-#   - Added an action card to the Microsoft Teams webhook message to view the computer's inventory record in Jamf Pro ([Pull Request No. 32](https://github.com/dan-snelson/Setup-Your-Mac/pull/32); thanks @robjschroeder!)
-#   - Additional User Input Flags ([Pull Request No. 34](https://github.com/dan-snelson/Setup-Your-Mac/pull/34); thanks @rougegoat!)
-#   - Corrected Dan's copy-pasta bug: Changed `--webHook` to `--data` ([Pull Request No. 36](https://github.com/dan-snelson/Setup-Your-Mac/pull/36); thanks @colorenz!)
-#   - Enable or disable any combination of the fields on the Welcome dialog ([Pull Request No. 37](https://github.com/dan-snelson/Setup-Your-Mac/pull/37); thanks big bunches, @rougegoat!!)
-#   - Moved various `shellcheck disable` codes sprinkled throughout script front-and-center to Line No. `2`
-#   - Add Remote Validation results of "Success" or "Installed" to update the List Item with "Installed" instead of "Running" ([Pull Request No. 41](https://github.com/dan-snelson/Setup-Your-Mac/pull/41); thanks @drtaru!)
-#   - Option to disable Banner Text ([Pull Request No. 42](https://github.com/dan-snelson/Setup-Your-Mac/pull/42); thanks, @rougegoat!)
-#   - Switch `policy -trigger` to `policy -event` (Addresses [Issue No. 38](https://github.com/dan-snelson/Setup-Your-Mac/issues/38); thanks for looking out for us, @delize!)
-#   - Resolves an issue when `promptForConfiguration` is NOT set to `true`, the `checkNetworkQualityConfigurations` function would display in the "Welcome" dialog (Addresses [Issue No. 46](https://github.com/dan-snelson/Setup-Your-Mac/issues/46); thanks, @jonlonergan!)
-#   - Corrected capitalization of `networkQuality`
-#   - Added `trigger` `validation` to "Elapsed Time" output
-#   - Updated `webhookMessage` to include Slack functionality ([Pull Request No. 48](https://github.com/dan-snelson/Setup-Your-Mac/pull/48); thanks @iDrewbs!)
-#   - Add button to computer record for Slack webhook ([Pull Request No. 49](https://github.com/dan-snelson/Setup-Your-Mac/pull/49); thanks @drtaru!)
+#   Version 1.11.0, 24-May-2023, Dan K. Snelson (@dan-snelson)
+#   - Updates for `swiftDialog` `2.2`
+#       - Required `selectitems`
+#       - New `activate` command to bring swiftDialog to the front
+#       - Display Configurations as radio buttons
+#   - Report on RSR version (if applicable) [Pull Request No. 50](https://github.com/dan-snelson/Setup-Your-Mac/pull/50) thanks @drtaru!)
+#   - Specify a Configuration as Parameter `11` ([Pull Request No. 59](https://github.com/dan-snelson/Setup-Your-Mac/pull/59); thanks big bunches, @drtaru!. Addresses [Issue No. 58](https://github.com/dan-snelson/Setup-Your-Mac/issues/58); thanks for the idea, @nunoidev!)
+#   - Configuration Names and Descriptions as variables ([Pull Request No. 60](https://github.com/dan-snelson/Setup-Your-Mac/pull/60); great idea! thanks, @theadamcraig!)
+#   - Consolidated Jamf Pro-related webHookMessage variables; Set "Additional Comments" to "None" when there aren't any failures 
 # 
 ####################################################################################################
 
@@ -66,24 +34,74 @@
 # Script Version and Jamf Pro Script Parameters
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="1.9.0"
-export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin/
-scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                    # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
-debugMode="${5:-"true"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
-welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
+scriptVersion="1.11.0"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
-scriptLog="${4:-"/var/log/org.churchofjesuschrist.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
-debugMode="${5:-"verbose"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
-welcomeDialog="${6:-"userInput"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
-completionActionOption="${7:-"Restart Attended"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
+scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
+debugMode="${5:-"false"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
+welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
+completionActionOption="${7:-"wait"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
 requiredMinimumBuild="${8:-"disabled"}"                                         # Parameter 8: Required Minimum Build [ disabled (default) | 22E ] (i.e., Your organization's required minimum build of macOS to allow users to proceed; use "22E" for macOS 13.3)
 outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     # Parameter 9: Outdated OS Action [ /System/Library/CoreServices/Software Update.app (default) | jamfselfservice://content?entity=policy&id=117&action=view ] (i.e., Jamf Pro Self Service policy ID for operating system ugprades)
-webhookURL="${10:-""}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
-presetConfiguration="${11:-""}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: Only used when `welcomeDialog` is set to `video` or `false`)
+webhookURL="${10:-"https://hooks.slack.com/services/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"}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
+presetConfiguration="${11:-"Required"}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: Only used when `welcomeDialog` is set to `video` or `false`)
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Operating System, cpu, currently logged-in user and default Exit Code
+# Various Feature Variables
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+debugModeSleepAmount="3"    # Delay for various actions when running in Debug Mode
+failureDialog="true"        # Display the so-called "Failure" dialog (after the main SYM dialog) [ true | false ]
+
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Welcome Message User Input Customization Choices (thanks, @rougegoat!)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# These control which user input boxes are added to the first page of Setup Your Mac. If you do not want to ask about a value, set it to any other value
+promptForUsername="true"
+prefillUsername="true"          # prefills the currently logged in user's username
+promptForComputerName="true"
+promptForAssetTag="true"
+promptForRoom="true"
+promptForBuilding="true"
+promptForDepartment="true"
+promptForConfiguration="true"   # Removes the Configuration dropdown entirely and uses the "Catch-all (i.e., used when `welcomeDialog` is set to `video` or `false`)" policyJSON
+
+# Disables the Blurscreen enabled by default in Production
+moveableInProduction="true"
+
+# An unsorted, comma-separated list of buildings (with possible duplication). If empty, this will be hidden from the user info prompt
+buildingsListRaw="Benson (Ezra Taft) Building,Brimhall (George H.) Building,BYU Conference Center,Centennial Carillon Tower,Chemicals Management Building,Clark (Herald R.) Building,Clark (J. Reuben) Building,Clyde (W.W.) Engineering Building,Crabtree (Roland A.) Technology Building,Ellsworth (Leo B.) Building,Engineering Building,Eyring (Carl F.) Science Center,Grant (Heber J.) Building,Harman (Caroline Hemenway) Building,Harris (Franklin S.) Fine Arts Center,Johnson (Doran) House East,Kimball (Spencer W.) Tower,Knight (Jesse) Building,Lee (Harold B.) Library,Life Sciences Building,Life Sciences Greenhouses,Maeser (Karl G.) Building,Martin (Thomas L.) Building,McKay (David O.) Building,Nicholes (Joseph K.) Building,Smith (Joseph F.) Building,Smith (Joseph) Building,Snell (William H.) Building,Talmage (James E.) Math Sciences/Computer Building,Tanner (N. Eldon) Building,Taylor (John) Building,Wells (Daniel H.) Building"
+
+# A sorted, unique, JSON-compatible list of buildings
+buildingsList=$( echo "${buildingsListRaw}" | tr ',' '\n' | sort -f | uniq | sed -e 's/^/\"/' -e 's/$/\",/' -e '$ s/.$//' )
+
+# An unsorted, comma-separated list of departments (with possible duplication). If empty, this will be hidden from the user info prompt
+departmentListRaw="Asset Management,Sales,Australia Area Office,Purchasing / Sourcing,Board of Directors,Strategic Initiatives & Programs,Operations,Business Development,Marketing,Creative Services,Customer Service / Customer Experience,Risk Management,Engineering,Finance / Accounting,Sales,General Management,Human Resources,Marketing,Investor Relations,Legal,Marketing,Sales,Product Management,Production,Corporate Communications,Information Technology / Technology,Quality Assurance,Project Management Office,Sales,Technology"
+
+# A sorted, unique, JSON-compatible list of departments
+departmentList=$( echo "${departmentListRaw}" | tr ',' '\n' | sort -f | uniq | sed -e 's/^/\"/' -e 's/$/\",/' -e '$ s/.$//' )
+
+# Branding overrides
+brandingBanner="https://img.freepik.com/free-photo/heavy-red-cloud-haze_23-2148102335.jpg"
+brandingBannerDisplayText="true"
+brandingIconLight="https://cdn-icons-png.flaticon.com/512/979/979585.png"
+brandingIconDark="https://cdn-icons-png.flaticon.com/512/740/740878.png"
+
+# IT Support Variables - Use these if the default text is fine but you want your org's info inserted instead
+supportTeamName="Help Desk"
+supportTeamPhone="+1 (801) 555-1212"
+supportTeamEmail="support@domain.org"
+supportKB="KB86753099"
+supportTeamErrorKB=", and mention [${supportKB}](https://servicenow.company.com/support?id=kb_article_view&sysparm_article=${supportKB}#Failures)"
+supportTeamHelpKB="\n- **Knowledge Base Article:** ${supportKB}"
+
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Operating System, Computer Model Name, etc.
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 osVersion=$( sw_vers -productVersion )
@@ -94,36 +112,8 @@ if [[ -n $osVersionExtra ]] && [[ "${osMajorVersion}" -ge 13 ]]; then osVersion=
 modelName=$( /usr/libexec/PlistBuddy -c 'Print :0:_items:0:machine_name' /dev/stdin <<< "$(system_profiler -xml SPHardwareDataType)" )
 reconOptions=""
 exitCode="0"
-cpu=$(sysctl -n machdep.cpu.brand_string | awk '{print $1}')
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-# Retrieve Org name and install appropriate logos
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-org_name="${10}"
-if [[ $org_name = "Emerson Collective" ]]; then
-    org_short_name="EC"
-    echo "Org short name is $org_short_name for $org_name"
-elif [[ $org_name = "XQ Institute" ]]; then
-    org_short_name="XQ"
-    echo "Org short name is $org_short_name for $org_name"
-elif [[ $org_name = *"CRED"* ]]; then
-    org_short_name="CC"
-    echo "Org short name is $org_short_name for $org_name"
-else
-    org_short_name="EC"
-    org_name="Emerson Collective"
-    echo "Defaulting to $org_short_name for $org_name"
-fi
 
-logo_file="/Library/${org_short_name}/logo.png"
-if [[ -e "$logo_file" ]]; then
-    echo "logo file exists at ${logo_file}"
-else
-    echo "logo file not found, running appropriate JAMF policy to install"
-    jamf policy -trigger install_${org_short_name}_logos
-fi
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Configuration Variables
@@ -152,14 +142,6 @@ configurationThreeSize="106"            # Configuration Three in Gibibits (i.e.,
 # Pre-flight Checks
 #
 ####################################################################################################
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Set set up complete to false
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-defaults write com.ec.plist setup_complete False
-
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Pre-flight Check: Client-side Logging
@@ -503,10 +485,6 @@ jamfBinary="/usr/local/bin/jamf"
 # "Welcome" dialog Title, Message and Icon
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname} and welcome to your new Mac!"
-welcomeMessage="Please enter your Mac's **Asset Tag**, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac.  \n\nOnce completed, the **Wait** button will be enabled and you'll be able to review the results before restarting your Mac.  \n\nIf you need assistance, please contact the IT Team at ithelp@emersoncollective.com.  \n\n---  \n\n#### Configurations  \n- **Required:** Minimum organization apps  \n- **Recommended:** Required apps and Microsoft Office  \n- **Complete:** Recommended apps, Adobe Acrobat Reader and Google Chrome"
-welcomeBannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
-welcomeBannerText="Happy $( date +'%A' ), ${loggedInUserFirstname} and welcome to your new Mac!"
 welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}"
 
 welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}. \n\nIf you need assistance, please contact the ${supportTeamName}: ${supportTeamPhone} and mention ${supportKB}. \n\n---"
@@ -649,7 +627,7 @@ welcomeJSON='
     "button1text" : "Continue",
     "button2text" : "Quit",
     "infotext" : "'"${scriptVersion}"'",
-    "blurscreen" : "true",
+    "blurscreen" : "false",
     "ontop" : "true",
     "titlefont" : "shadow=true, size=36, colour=#FFFDF4",
     "messagefont" : "size=14",
@@ -677,12 +655,6 @@ welcomeJSON='
 
 title="Setting up ${loggedInUserFirstname}‘s ${modelName}"
 message="Please wait while the following apps are installed …"
-bannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
-bannerText="Setting up ${loggedInUserFirstname}'s Mac"
-helpmessage="If you need assistance, please contact the IT Team  \n- **Email:** ithelp@emersoncollective.com  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
-bannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
-bannerText="Setting up ${loggedInUserFirstname}'s Mac"
-helpmessage="If you need assistance, please contact the IT Team  \n- **Email:** ithelp@emersoncollective.com  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
 if [[ -n "${brandingBanner}" ]]; then
     bannerImage="${brandingBanner}"
 else
@@ -793,15 +765,15 @@ setupYourMacPolicyArrayIconPrefixUrl="https://ics.services.jamfcloud.com/icon/ha
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 function policyJSONConfiguration() {
-
+    
     outputLineNumberInVerboseDebugMode
-
+    
     updateScriptLog "WELCOME DIALOG: PolicyJSON Configuration: $symConfiguration"
-
+    
     case ${symConfiguration} in
-
-        "${configurationOneName}" )
-
+        
+        "Required" )
+            
             policyJSON='
             {
                 "steps": [
@@ -978,10 +950,10 @@ function policyJSONConfiguration() {
                 ]
             }
             '
-            ;;
-
-        "${configurationTwoName}" )
-
+        ;;
+        
+        "Recommended" )
+            
             policyJSON='
             {
                 "steps": [
@@ -1110,10 +1082,10 @@ function policyJSONConfiguration() {
                 ]
             }
             '
-            ;;
-
-        "${configurationThreeName}" )
-
+        ;;
+        
+        "Complete" )
+            
             policyJSON='
             {
                 "steps": [
@@ -1286,10 +1258,10 @@ function policyJSONConfiguration() {
                 ]
             }
             '
-            ;;
-
+        ;;
+        
         * ) # Catch-all (i.e., used when `welcomeDialog` is set to `video` or `false`)
-
+            
             policyJSON='
             {
                 "steps": [
@@ -1460,10 +1432,6 @@ function policyJSONConfiguration() {
                             {
                                 "trigger": "rename_computer",
                                 "validation": "None"
-                                "trigger": "rename_computer",
-                                "validation": "None"
-                                "trigger": "recon",
-                                "validation": "recon"
                             }
                         ]
                     },                    {
@@ -1480,10 +1448,13 @@ function policyJSONConfiguration() {
             }
             '
         ;;
-
+        
     esac
-
+    
 }
+
+
+
 
 
 
@@ -1703,15 +1674,7 @@ function finalise(){
             dialogUpdateSetupYourMac "button1text: Continue …"
             dialogUpdateSetupYourMac "button1: enable"
             dialogUpdateSetupYourMac "progress: reset"
-        dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}.  \n\nPlease complete the following steps:\n1. Reboot and login to your Mac  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the IT Team at ithelp@emersoncollective.com. "
-        dialogUpdateFailure "icon: SF=xmark.circle.fill,weight=bold,colour1=#BB1717,colour2=#F31F1F"
-        dialogUpdateFailure "button1text: ${button1textCompletionActionOption}"
-
-        
-        dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}.  \n\nPlease complete the following steps:\n1. Reboot and login to your Mac  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the IT Team at ithelp@emersoncollective.com. "
-        dialogUpdateFailure "icon: SF=xmark.circle.fill,weight=bold,colour1=#BB1717,colour2=#F31F1F"
-        dialogUpdateFailure "button1text: ${button1textCompletionActionOption}"
-
+            
             # Wait for user-acknowledgment due to detected failure
             wait
 
@@ -2555,8 +2518,7 @@ function webHookMessage() {
         }
 EOF
 )
-        
-        
+
         # Send the message to Slack
         updateScriptLog "Send the message to Slack …"
         updateScriptLog "${webHookdata}"
@@ -2569,24 +2531,12 @@ EOF
         
     else
         
-    updateScriptLog "Generating Microsoft Teams Message …"
+        updateScriptLog "Generating Microsoft Teams Message …"
 
-    # Jamf Pro URL
-    jamfProURL=$(/usr/bin/defaults read /Library/Preferences/com.jamfsoftware.jamf.plist jss_url)
-    
-    # Jamf Pro URL for on-prem, multi-node, clustered environments
-    # case ${jamfProURL} in
-    #     *"beta"*    ) jamfProURL="https://jamfpro-beta.internal.company.com/" ;;
-    #     *           ) jamfProURL="https://jamfpro-prod.internal.company.com/" ;;
-    # esac
+        # URL to an image to add to your notification
+        activityImage="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/78010/old-mac-computer-clipart-md.png"
 
-    # URL to computer object
-    jamfProComputerURL="${jamfProURL}computers.html?id=${computerID}&o=r"
-
-    # URL to an image to add to your notification
-    activityImage="https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/78010/old-mac-computer-clipart-md.png"
-
-    webHookdata=$(cat <<EOF
+        webHookdata=$(cat <<EOF
 {
     "@type": "MessageCard",
     "@context": "http://schema.org/extensions",
@@ -2632,7 +2582,6 @@ EOF
 EOF
 )
 
-
     # Send the message to Microsoft Teams
     updateScriptLog "Send the message Microsoft Teams …"
     updateScriptLog "${webHookdata}"
@@ -2648,6 +2597,7 @@ EOF
     fi
     
 }
+
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
