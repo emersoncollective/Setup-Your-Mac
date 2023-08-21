@@ -54,7 +54,6 @@
 
 scriptVersion="1.12.1"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
-<<<<<<< HEAD
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
 debugMode="${5:-"true"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
@@ -63,7 +62,6 @@ requiredMinimumBuild="${8:-"disabled"}"                                         
 outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     # Parameter 9: Outdated OS Action [ /System/Library/CoreServices/Software Update.app (default) | jamfselfservice://content?entity=policy&id=117&action=view ] (i.e., Jamf Pro Self Service policy ID for operating system ugprades)
 webhookURL="${10:-"https://hooks.slack.com/services/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"}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
 presetConfiguration="${11:-"Required"}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: Only used when `welcomeDialog` is set to `video` or `false`)
-=======
 scriptLog="${4:-"/var/log/org.churchofjesuschrist.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
 debugMode="${5:-"verbose"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"userInput"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | messageOnly | false ]
@@ -73,7 +71,6 @@ outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     
 webhookURL="${10:-""}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
 presetConfiguration="${11:-""}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: If set, `promptForConfiguration` will be automatically suppressed and the preselected configuration will be used instead)
 
->>>>>>> 838d71e55027bbd34a7f73497d1f8187ebf4a991
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -918,15 +915,12 @@ function policyJSONConfiguration() {
                         ]
                     },
                     {
-<<<<<<< HEAD
                         "listitem": "Zoom",
                         "icon": "be66420495a3f2f1981a49a0e0ad31783e9a789e835b4196af60554bf4c115ac",
                         "progresstext": "Zoom is a videotelephony software program developed by Zoom Video Communications.",
-=======
                         "listitem": "Sophos Endpoint Services (Remote)",
                         "icon": "0f68be689684a00a3a054d71a31e43e2362f96c16efa5a560fb61bc1bf41901c",
                         "progresstext": "Remotely validating Sophos Endpoint services …",
->>>>>>> 838d71e55027bbd34a7f73497d1f8187ebf4a991
                         "trigger_list": [
                             {
                                 "trigger": "install_zoom",
@@ -956,15 +950,12 @@ function policyJSONConfiguration() {
                     },
                     
                     {
-<<<<<<< HEAD
                         "listitem": "Slack",
                         "icon": "a1ecbe1a4418113177cc061def4996d20a01a1e9b9adf9517899fcca31f3c026",
                         "progresstext": "Install Slack Messaging System",
-=======
                         "listitem": "Palo Alto GlobalProtect",
                         "icon": "acbf39d8904ad1a772cf71c45d93e373626d379a24f8b1283b88134880acb8ef",
                         "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
->>>>>>> 838d71e55027bbd34a7f73497d1f8187ebf4a991
                         "trigger_list": [
                             {
                                 "trigger": "install_slack",
@@ -1350,17 +1341,14 @@ function policyJSONConfiguration() {
                 ]
             }
             '
-<<<<<<< HEAD
         ;;
         
         * ) # Catch-all (i.e., used when `welcomeDialog` is set to `video` or `false`)
             
-=======
             ;;
 
         * ) # Catch-all (i.e., used when `welcomeDialog` is set to `video`, `messageOnly` or `false`)
 
->>>>>>> 838d71e55027bbd34a7f73497d1f8187ebf4a991
             policyJSON='
             {
                 "steps": [
@@ -1468,15 +1456,12 @@ function policyJSONConfiguration() {
                     },
                     
                     {
-<<<<<<< HEAD
                         "listitem": "Slack",
                         "icon": "a1ecbe1a4418113177cc061def4996d20a01a1e9b9adf9517899fcca31f3c026",
                         "progresstext": "Install Slack Messaging System",
-=======
                         "listitem": "Palo Alto GlobalProtect",
                         "icon": "acbf39d8904ad1a772cf71c45d93e373626d379a24f8b1283b88134880acb8ef",
                         "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
->>>>>>> 838d71e55027bbd34a7f73497d1f8187ebf4a991
                         "trigger_list": [
                             {
                                 "trigger": "install_slack",
@@ -1539,7 +1524,17 @@ function policyJSONConfiguration() {
                                 "validation": "None"
                             }
                         ]
-                    },                    {
+                    },{
+                        "listitem": "Computer Inventory",
+                        "icon": "ff2147a6c09f5ef73d1c4406d00346811a9c64c0b6b7f36eb52fcb44943d26f9",
+                        "progresstext": "A listing of your Macs apps and settings — its inventory — is sent automatically to the Jamf Pro server daily.",
+                        "trigger_list": [
+                            {
+                                "trigger": "recon",
+                                "validation": "recon"
+                            }
+                        ]
+                    },                     {
                         "listitem": "Complete Computer Setup",
                         "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
                         "progresstext": "Mark the setup process as complete and run a full inventory",
