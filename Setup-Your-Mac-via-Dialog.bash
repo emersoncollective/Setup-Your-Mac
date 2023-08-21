@@ -10,16 +10,34 @@
 #
 # HISTORY
 #
-#   Version 1.11.0, 24-May-2023, Dan K. Snelson (@dan-snelson)
-#   - Updates for `swiftDialog` `2.2`
-#       - Required `selectitems`
-#       - New `activate` command to bring swiftDialog to the front
-#       - Display Configurations as radio buttons
-#   - Report on RSR version (if applicable) [Pull Request No. 50](https://github.com/dan-snelson/Setup-Your-Mac/pull/50) thanks @drtaru!)
-#   - Specify a Configuration as Parameter `11` ([Pull Request No. 59](https://github.com/dan-snelson/Setup-Your-Mac/pull/59); thanks big bunches, @drtaru!. Addresses [Issue No. 58](https://github.com/dan-snelson/Setup-Your-Mac/issues/58); thanks for the idea, @nunoidev!)
-#   - Configuration Names and Descriptions as variables ([Pull Request No. 60](https://github.com/dan-snelson/Setup-Your-Mac/pull/60); great idea! thanks, @theadamcraig!)
-#   - Consolidated Jamf Pro-related webHookMessage variables; Set "Additional Comments" to "None" when there aren't any failures 
-# 
+#   Version 1.12.0, 21-Aug-2023, Dan K. Snelson (@dan-snelson)
+#   - Add version check to `dialogCheck` ([Pull Request No. 67](https://github.com/dan-snelson/Setup-Your-Mac/pull/67); thanks yet again, @drtaru!)
+#   - Make `presetConfiguration` also apply to `userInput` ([Pull Request No. 63](https://github.com/dan-snelson/Setup-Your-Mac/pull/63); thanks for another one, @rougegoat!)
+#   - Fix for visual hiccup where `infobox` displays "Analyzing input …" if `configurationDownloadEstimation` and `promptForConfiguration` are both set to `false` ([Pull Request No. 69](https://github.com/dan-snelson/Setup-Your-Mac/pull/69); thanks yet again, @rougegoat!)
+#   - Added networkQuality check for macOS Sonoma 14
+#   - Formatting updates
+#   - Updated Palo Alto GlobalProtect icon hash
+#   - Changed "Restart Attended" Completion Action one-liner (Addresses [Issue No. 71](https://github.com/dan-snelson/Setup-Your-Mac/issues/71); thanks, @master-vodawagner!)
+#   - Delay the removal of `overlayicon` (Addresses [Issue No. 73](https://github.com/dan-snelson/Setup-Your-Mac/issues/73); thanks, @mani2care!)
+#   - Added `reconOption` prompts for `realname` and `email` (Addresses [Issue No. 52](https://github.com/dan-snelson/Setup-Your-Mac/issues/52); thanks for the suggestion @brianhm; thanks for the code, @Siggloo!)
+#   - Changed dialog heights to percentages
+#   - Auto-cache / auto-remove a hosted welcomeBannerImage (Addresses [Issue No. 74](https://github.com/dan-snelson/Setup-Your-Mac/issues/74)
+#   - Added a `welcomeDialog` option of `messageOnly` (Addresses [Issue No. 66](https://github.com/dan-snelson/Setup-Your-Mac/issues/66); thanks for the suggestion, @ryanasik)
+#   - Reverted "Restart Attended" Completion Action one-liner (Unaddresses [Issue No. 71](https://github.com/dan-snelson/Setup-Your-Mac/issues/71); sorry, @master-vodawagner)
+#   - Set newly added email address to required (regex courtesy of @bartreardon) (Addresses [Issue No. 75](https://github.com/dan-snelson/Setup-Your-Mac/issues/75); thanks for the suggestion, @ryanasik)
+#   - Added code to pre-fill user's full name (Addresses [Issue No. 76](https://github.com/dan-snelson/Setup-Your-Mac/issues/76); thanks for the suggestion, @ryanasik)
+#   - Reverted dialog heights to pixels
+#   - Updated Vimeo video ID
+#   - Updated `serialNumber` code (with special thanks to @Eltord for saving each and every user `0.0.6` seconds)
+#   - Added `suppressReconOnPolicy` to `-forceNoRecon` flag when executing the `run_jamf_trigger` function (Addresses [Issue No. 79](https://github.com/dan-snelson/Setup-Your-Mac/issues/79); thanks for the idea, @fitzwater-rowan; thanks for yet another PR, @rougegoat!)
+#   - Added "Install Buffers" to each Configuration to include installation time of packages (Addresses [Issue No. 78](https://github.com/dan-snelson/Setup-Your-Mac/issues/78); thanks, @Eltord!
+#   - Added permissions correction on `mktemp`-created files (for swiftDialog `2.3`)
+#   - Updated required version of swiftDialog to `2.3.0.4718`
+#
+#   Version 1.12.1, 21-Aug-2023, Dan K. Snelson (@dan-snelson)
+#   - Added permissions correction on ALL `mktemp`-created files (for swiftDialog `2.3.1`)
+#   - Updated required version of swiftDialog to `2.3.1.4721`
+#
 ####################################################################################################
 
 
@@ -34,8 +52,9 @@
 # Script Version and Jamf Pro Script Parameters
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="1.11.0"
+scriptVersion="1.12.1"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
+<<<<<<< HEAD
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
 debugMode="${5:-"true"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
@@ -44,6 +63,17 @@ requiredMinimumBuild="${8:-"disabled"}"                                         
 outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     # Parameter 9: Outdated OS Action [ /System/Library/CoreServices/Software Update.app (default) | jamfselfservice://content?entity=policy&id=117&action=view ] (i.e., Jamf Pro Self Service policy ID for operating system ugprades)
 webhookURL="${10:-"https://hooks.slack.com/services/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"}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
 presetConfiguration="${11:-"Required"}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: Only used when `welcomeDialog` is set to `video` or `false`)
+=======
+scriptLog="${4:-"/var/log/org.churchofjesuschrist.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
+debugMode="${5:-"verbose"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
+welcomeDialog="${6:-"userInput"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | messageOnly | false ]
+completionActionOption="${7:-"Restart Attended"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
+requiredMinimumBuild="${8:-"disabled"}"                                         # Parameter 8: Required Minimum Build [ disabled (default) | 22E ] (i.e., Your organization's required minimum build of macOS to allow users to proceed; use "22E" for macOS 13.3)
+outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     # Parameter 9: Outdated OS Action [ /System/Library/CoreServices/Software Update.app (default) | jamfselfservice://content?entity=policy&id=117&action=view ] (i.e., Jamf Pro Self Service policy ID for operating system ugprades)
+webhookURL="${10:-""}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
+presetConfiguration="${11:-""}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: If set, `promptForConfiguration` will be automatically suppressed and the preselected configuration will be used instead)
+
+>>>>>>> 838d71e55027bbd34a7f73497d1f8187ebf4a991
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -62,12 +92,18 @@ failureDialog="true"        # Display the so-called "Failure" dialog (after the 
 # These control which user input boxes are added to the first page of Setup Your Mac. If you do not want to ask about a value, set it to any other value
 promptForUsername="true"
 prefillUsername="true"          # prefills the currently logged in user's username
+promptForRealName="true"
+prefillRealname="true"          # prefills the currently logged in user's fullname
+promptForEmail="true"
 promptForComputerName="true"
 promptForAssetTag="true"
 promptForRoom="true"
 promptForBuilding="true"
 promptForDepartment="true"
-promptForConfiguration="true"   # Removes the Configuration dropdown entirely and uses the "Catch-all (i.e., used when `welcomeDialog` is set to `video` or `false`)" policyJSON
+promptForConfiguration="true"   # Removes the Configuration dropdown entirely and uses the "Catch-all (i.e., used when `welcomeDialog` is set to `video` or `false`)" or presetConfiguration policyJSON
+
+# Set to "true" to suppress the Update Inventory option on policies that are called
+suppressReconOnPolicy="false"
 
 # Disables the Blurscreen enabled by default in Production
 moveableInProduction="true"
@@ -85,7 +121,7 @@ departmentListRaw="Asset Management,Sales,Australia Area Office,Purchasing / Sou
 departmentList=$( echo "${departmentListRaw}" | tr ',' '\n' | sort -f | uniq | sed -e 's/^/\"/' -e 's/$/\",/' -e '$ s/.$//' )
 
 # Branding overrides
-brandingBanner="https://img.freepik.com/free-photo/heavy-red-cloud-haze_23-2148102335.jpg"
+brandingBanner="https://img.freepik.com/free-vector/abstract-orange-background-with-lines-halftone-effect_1017-32107.jpg"
 brandingBannerDisplayText="true"
 brandingIconLight="https://cdn-icons-png.flaticon.com/512/979/979585.png"
 brandingIconDark="https://cdn-icons-png.flaticon.com/512/740/740878.png"
@@ -119,21 +155,26 @@ exitCode="0"
 # Configuration Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-configurationDownloadEstimation="true"  # [ true (default) | false ]
-correctionCoefficient="1.01"            # "Fudge factor" (to help estimate match reality)
-configurationCatchAllSize="34"          # Catch-all Configuration in Gibibits (i.e., Total File Size in Gigabytes * 7.451) 
+configurationDownloadEstimation="true"      # [ true (default) | false ]
+correctionCoefficient="1.01"                # "Fudge factor" (to help estimate match reality)
+
+configurationCatchAllSize="34"              # Catch-all Configuration in Gibibits (i.e., Total File Size in Gigabytes * 7.451)
+configurationCatchAllInstallBuffer="0"      # Buffer time added to estimates to include installation time of packages, in seconds. Set to 0 to disable. 
 
 configurationOneName="Required"
-configurtaionOneDescription="Minimum organization apps"
-configurationOneSize="34"               # Configuration One in Gibibits (i.e., Total File Size in Gigabytes * 7.451) 
+configurationOneDescription="Minimum organization apps"
+configurationOneSize="34"                   # Configuration One in Gibibits (i.e., Total File Size in Gigabytes * 7.451)
+configurationOneInstallBuffer="0"           # Buffer time added to estimates to include installation time of packages, in seconds. Set to 0 to disable. 
 
 configurationTwoName="Recommended"
 configurationTwoDescription="Required apps and Microsoft Office"
-configurationTwoSize="62"               # Configuration Two in Gibibits (i.e., Total File Size in Gigabytes * 7.451) 
+configurationTwoSize="62"                   # Configuration Two in Gibibits (i.e., Total File Size in Gigabytes * 7.451) 
+configurationTwoInstallBuffer="0"           # Buffer time added to estimates to include installation time of packages, in seconds. Set to 0 to disable. 
 
 configurationThreeName="Complete"
 configurationThreeDescription="Recommended apps, Adobe Acrobat Reader and Google Chrome"
-configurationThreeSize="106"            # Configuration Three in Gibibits (i.e., Total File Size in Gigabytes * 7.451) 
+configurationThreeSize="106"                # Configuration Three in Gibibits (i.e., Total File Size in Gigabytes * 7.451) 
+configurationThreeInstallBuffer="0"         # Buffer time added to estimates to include installation time of packages, in seconds. Set to 0 to disable. 
 
 
 
@@ -296,8 +337,9 @@ fi
 # Pre-flight Check: Ensure computer does not go to sleep during SYM (thanks, @grahampugh!)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-updateScriptLog "PRE-FLIGHT CHECK: Caffeinating this script (PID: $$)"
-caffeinate -dimsu -w $$ &
+symPID="$$"
+updateScriptLog "PRE-FLIGHT CHECK: Caffeinating this script (PID: $symPID)"
+caffeinate -dimsu -w $symPID &
 
 
 
@@ -362,10 +404,7 @@ toggleJamfLaunchDaemon
 # Pre-flight Check: Validate / install swiftDialog (Thanks big bunches, @acodega!)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-function dialogCheck() {
-
-    # Output Line Number in `verbose` Debug Mode
-    if [[ "${debugMode}" == "verbose" ]]; then updateScriptLog "PRE-FLIGHT CHECK: # # # SETUP YOUR MAC VERBOSE DEBUG MODE: Line No. ${LINENO} # # #" ; fi
+function dialogInstall() {
 
     # Get the URL of the latest PKG From the Dialog GitHub repo
     dialogURL=$(curl --silent --fail "https://api.github.com/repos/bartreardon/swiftDialog/releases/latest" | awk -F '"' "/browser_download_url/ && /pkg\"/ { print \$4; exit }")
@@ -373,55 +412,73 @@ function dialogCheck() {
     # Expected Team ID of the downloaded PKG
     expectedDialogTeamID="PWA5E9TQ59"
 
-    # Check for Dialog and install if not found
-    if [ ! -e "/Library/Application Support/Dialog/Dialog.app" ]; then
+    updateScriptLog "PRE-FLIGHT CHECK: Installing swiftDialog..."
 
-        updateScriptLog "PRE-FLIGHT CHECK: Dialog not found. Installing..."
+    # Create temporary working directory
+    workDirectory=$( /usr/bin/basename "$0" )
+    tempDirectory=$( /usr/bin/mktemp -d "/private/tmp/$workDirectory.XXXXXX" )
 
-        # Create temporary working directory
-        workDirectory=$( /usr/bin/basename "$0" )
-        tempDirectory=$( /usr/bin/mktemp -d "/private/tmp/$workDirectory.XXXXXX" )
+    # Download the installer package
+    /usr/bin/curl --location --silent "$dialogURL" -o "$tempDirectory/Dialog.pkg"
 
-        # Download the installer package
-        /usr/bin/curl --location --silent "$dialogURL" -o "$tempDirectory/Dialog.pkg"
+    # Verify the download
+    teamID=$(/usr/sbin/spctl -a -vv -t install "$tempDirectory/Dialog.pkg" 2>&1 | awk '/origin=/ {print $NF }' | tr -d '()')
 
-        # Verify the download
-        teamID=$(/usr/sbin/spctl -a -vv -t install "$tempDirectory/Dialog.pkg" 2>&1 | awk '/origin=/ {print $NF }' | tr -d '()')
+    # Install the package if Team ID validates
+    if [[ "$expectedDialogTeamID" == "$teamID" ]]; then
 
-        # Install the package if Team ID validates
-        if [[ "$expectedDialogTeamID" == "$teamID" ]]; then
-
-            /usr/sbin/installer -pkg "$tempDirectory/Dialog.pkg" -target /
-            sleep 2
-            dialogVersion=$( /usr/local/bin/dialog --version )
-            updateScriptLog "PRE-FLIGHT CHECK: swiftDialog version ${dialogVersion} installed; proceeding..."
-
-        else
-
-            # Display a so-called "simple" dialog if Team ID fails to validate
-            osascript -e 'display dialog "Please advise your Support Representative of the following error:\r\r• Dialog Team ID verification failed\r\r" with title "Setup Your Mac: Error" buttons {"Close"} with icon caution'
-            completionActionOption="Quit"
-            exitCode="1"
-            quitScript
-
-        fi
-
-        # Remove the temporary working directory when done
-        /bin/rm -Rf "$tempDirectory"
+        /usr/sbin/installer -pkg "$tempDirectory/Dialog.pkg" -target /
+        sleep 2
+        dialogVersion=$( /usr/local/bin/dialog --version )
+        updateScriptLog "PRE-FLIGHT CHECK: swiftDialog version ${dialogVersion} installed; proceeding..."
 
     else
 
-        updateScriptLog "PRE-FLIGHT CHECK: swiftDialog version $(/usr/local/bin/dialog --version) found; proceeding..."
+        # Display a so-called "simple" dialog if Team ID fails to validate
+        osascript -e 'display dialog "Please advise your Support Representative of the following error:\r\r• Dialog Team ID verification failed\r\r" with title "Setup Your Mac: Error" buttons {"Close"} with icon caution'
+        completionActionOption="Quit"
+        exitCode="1"
+        quitScript
 
+    fi
+
+    # Remove the temporary working directory when done
+    /bin/rm -Rf "$tempDirectory"
+
+}
+
+
+
+function dialogCheck() {
+
+    # Output Line Number in `verbose` Debug Mode
+    if [[ "${debugMode}" == "verbose" ]]; then updateScriptLog "PRE-FLIGHT CHECK: # # # SETUP YOUR MAC VERBOSE DEBUG MODE: Line No. ${LINENO} # # #" ; fi
+
+    # Check for Dialog and install if not found
+    if [ ! -e "/Library/Application Support/Dialog/Dialog.app" ]; then
+
+        updateScriptLog "PRE-FLIGHT CHECK: swiftDialog not found. Installing..."
+        dialogInstall
+
+    else
+
+        dialogVersion=$(/usr/local/bin/dialog --version)
+        if [[ "${dialogVersion}" < "2.3.1.4721" ]]; then
+            
+            updateScriptLog "PRE-FLIGHT CHECK: swiftDialog version ${dialogVersion} found but swiftDialog 2.3.0.4718 or newer is required; updating..."
+            dialogInstall
+            
+        else
+
+        updateScriptLog "PRE-FLIGHT CHECK: swiftDialog version ${dialogVersion} found; proceeding..."
+
+        fi
+    
     fi
 
 }
 
-if [[ ! -e "/Library/Application Support/Dialog/Dialog.app" ]]; then
-    dialogCheck
-else
-    updateScriptLog "PRE-FLIGHT CHECK: swiftDialog version $(/usr/local/bin/dialog --version) found; proceeding..."
-fi
+dialogCheck
 
 
 
@@ -445,7 +502,7 @@ updateScriptLog "PRE-FLIGHT CHECK: Complete"
 
 macOSproductVersion="$( sw_vers -productVersion )"
 macOSbuildVersion="$( sw_vers -buildVersion )"
-serialNumber=$( system_profiler SPHardwareDataType | grep Serial |  awk '{print $NF}' )
+serialNumber=$( ioreg -rd1 -c IOPlatformExpertDevice | awk -F'"' '/IOPlatformSerialNumber/{print $4}' )
 timestamp="$( date '+%Y-%m-%d-%H%M%S' )"
 dialogVersion=$( /usr/local/bin/dialog --version )
 
@@ -463,15 +520,19 @@ esac
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Set Dialog path, Command Files, JAMF binary, log files and currently logged-in user
+# Set JAMF binary, Dialog path and Command Files
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-dialogBinary="/usr/local/bin/dialog"
-welcomeJSONFile=$( mktemp -u /var/tmp/welcomeJSONFile.XXX )
-welcomeCommandFile=$( mktemp -u /var/tmp/dialogWelcome.XXX )
-setupYourMacCommandFile=$( mktemp -u /var/tmp/dialogSetupYourMac.XXX )
-failureCommandFile=$( mktemp -u /var/tmp/dialogFailure.XXX )
 jamfBinary="/usr/local/bin/jamf"
+dialogBinary="/usr/local/bin/dialog"
+welcomeJSONFile=$( mktemp /var/tmp/welcomeJSONFile.XXX )
+welcomeCommandFile=$( mktemp /var/tmp/dialogCommandFileWelcome.XXX )
+setupYourMacCommandFile=$( mktemp /var/tmp/dialogCommandFileSetupYourMac.XXX )
+failureCommandFile=$( mktemp /var/tmp/dialogCommandFileFailure.XXX )
+
+# Set permissions on Dialog Files
+chmod -v 666 "${welcomeJSONFile}"
+chmod -v 666 /var/tmp/dialogCommandFile*
 
 
 
@@ -487,10 +548,10 @@ jamfBinary="/usr/local/bin/jamf"
 
 welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}"
 
-welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}. \n\nIf you need assistance, please contact the ${supportTeamName}: ${supportTeamPhone} and mention ${supportKB}. \n\n---"
+welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}.  \n\nIf you need assistance, please contact the ${supportTeamName} at  \n${supportTeamPhone} and mention ${supportKB}.  \n\n---"
 
-if [[ "${promptForConfiguration}" == "true" ]]; then
-    welcomeMessage+="  \n\n#### Configurations  \n- **${configurationOneName}:** ${configurtaionOneDescription}  \n- **${configurationTwoName}:** ${configurationTwoDescription}  \n- **${configurationThreeName}:** ${configurationThreeDescription}"
+if { [[ "${promptForConfiguration}" == "true" ]] && [[ "${welcomeDialog}" != "messageOnly" ]]; } then
+    welcomeMessage+="  \n\n#### Configurations  \n- **${configurationOneName}:** ${configurationOneDescription}  \n- **${configurationTwoName}:** ${configurationTwoDescription}  \n- **${configurationThreeName}:** ${configurationThreeDescription}"
 else
     welcomeMessage=${welcomeMessage//", select your preferred **Configuration**"/}
 fi
@@ -504,14 +565,22 @@ fi
 if [[ "${brandingBannerDisplayText}" == "true" ]]; then welcomeBannerText="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}";
 else welcomeBannerText=""; fi
 welcomeCaption="Please review the above video, then click Continue."
-welcomeVideoID="vimeoid=821866488"
+welcomeVideoID="vimeoid=844672129"
 
 # Check if the custom welcomeBannerImage is available, and if not, use a alternative image
-if curl --output /dev/null --silent --head --fail "$welcomeBannerImage" || [  -f "$welcomeBannerImage" ]; then
+if curl --output /dev/null --silent --head --fail "$welcomeBannerImage" || [ -f "$welcomeBannerImage" ]; then
     updateScriptLog "WELCOME DIALOG: welcomeBannerImage is available, using it"
 else
     updateScriptLog "WELCOME DIALOG: welcomeBannerImage is not available, using a default image"
     welcomeBannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-448.jpg"
+fi
+
+# Cache the hosted custom welcomeBannerImage
+if [[ $welcomeBannerImage == *"http"* ]]; then
+    welcomeBannerImageFileName=$( echo ${welcomeBannerImage} | awk -F '/' '{print $NF}' )
+    updateScriptLog "WELCOME DIALOG: Auto-caching hosted '$welcomeBannerImageFileName' …"
+    curl --location --silent "$welcomeBannerImage" -o "/var/tmp/${welcomeBannerImageFileName}"
+    welcomeBannerImage="/var/tmp/${welcomeBannerImageFileName}"
 fi
 
 # Welcome icon set to either light or dark, based on user's Apperance setting (thanks, @mm2270!)
@@ -550,19 +619,29 @@ welcomeVideo="--title \"$welcomeTitle\" \
 
 # Text Fields
 if [ "$prefillUsername" == "true" ]; then usernamePrefil=',"value" : "'${loggedInUser}'"'; fi
+if [ "$prefillRealname" == "true" ]; then realnamePrefil=',"value" : "'${loggedInUserFullname}'"'; fi
 if [ "$promptForUsername" == "true" ]; then usernameJSON='{ "title" : "User Name","required" : false,"prompt" : "User Name"'${usernamePrefil}'},'; fi
+if [ "$promptForRealName" == "true" ]; then realNameJSON='{ "title" : "Full Name","required" : false,"prompt" : "Full Name"'${realnamePrefil}'},'; fi
+if [ "$promptForEmail" == "true" ]; then
+    emailJSON='{   "title" : "E-mail",
+        "required" : true,
+        "prompt" : "E-mail Address",
+        "regex" : "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+        "regexerror" : "Please enter a valid email address."
+    },'
+fi
 if [ "$promptForComputerName" == "true" ]; then compNameJSON='{ "title" : "Computer Name","required" : false,"prompt" : "Computer Name" },'; fi
 if [ "$promptForAssetTag" == "true" ]; then
     assetTagJSON='{   "title" : "Asset Tag",
         "required" : true,
-        "prompt" : "Please enter the seven-digit Asset Tag",
+        "prompt" : "Please enter the (at least) seven-digit Asset Tag",
         "regex" : "^(AP|IP|CD)?[0-9]{7,}$",
-        "regexerror" : "Please enter (at least) seven digits for the Asset Tag, optionally preceed by either AP, IP or CD."
+        "regexerror" : "Please enter (at least) seven digits for the Asset Tag, optionally preceded by either AP, IP or CD."
     },'
 fi
 if [ "$promptForRoom" == "true" ]; then roomJSON='{ "title" : "Room","required" : false,"prompt" : "Optional" }'; fi
 
-textFieldJSON="${usernameJSON}${compNameJSON}${assetTagJSON}${roomJSON}"
+textFieldJSON="${usernameJSON}${realNameJSON}${emailJSON}${compNameJSON}${assetTagJSON}${roomJSON}"
 textFieldJSON=$( echo ${textFieldJSON} | sed 's/,$//' )
 
 # Dropdowns
@@ -592,7 +671,7 @@ if [ "$promptForDepartment" == "true" ]; then
     fi
 fi
 
-if [ "$promptForConfiguration" == "true" ]; then
+if [ "$promptForConfiguration" == "true" ] && [ -z "${presetConfiguration}" ]; then
     configurationJSON='{
             "title" : "Configuration",
             "style" : "radio",
@@ -667,7 +746,7 @@ helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n-
 infobox="Analyzing input …" # Customize at "Update Setup Your Mac's infobox"
 
 # Check if the custom bannerImage is available, and if not, use a alternative image
-if curl --output /dev/null --silent --head --fail "$bannerImage" || [  -f "$bannerImage" ]; then
+if curl --output /dev/null --silent --head --fail "$bannerImage" || [ -f "$bannerImage" ]; then
     updateScriptLog "WELCOME DIALOG: bannerImage is available"
 else
     updateScriptLog "WELCOME DIALOG: bannerImage is not available, using alternative image"
@@ -839,9 +918,15 @@ function policyJSONConfiguration() {
                         ]
                     },
                     {
+<<<<<<< HEAD
                         "listitem": "Zoom",
                         "icon": "be66420495a3f2f1981a49a0e0ad31783e9a789e835b4196af60554bf4c115ac",
                         "progresstext": "Zoom is a videotelephony software program developed by Zoom Video Communications.",
+=======
+                        "listitem": "Sophos Endpoint Services (Remote)",
+                        "icon": "0f68be689684a00a3a054d71a31e43e2362f96c16efa5a560fb61bc1bf41901c",
+                        "progresstext": "Remotely validating Sophos Endpoint services …",
+>>>>>>> 838d71e55027bbd34a7f73497d1f8187ebf4a991
                         "trigger_list": [
                             {
                                 "trigger": "install_zoom",
@@ -871,9 +956,15 @@ function policyJSONConfiguration() {
                     },
                     
                     {
+<<<<<<< HEAD
                         "listitem": "Slack",
                         "icon": "a1ecbe1a4418113177cc061def4996d20a01a1e9b9adf9517899fcca31f3c026",
                         "progresstext": "Install Slack Messaging System",
+=======
+                        "listitem": "Palo Alto GlobalProtect",
+                        "icon": "acbf39d8904ad1a772cf71c45d93e373626d379a24f8b1283b88134880acb8ef",
+                        "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
+>>>>>>> 838d71e55027bbd34a7f73497d1f8187ebf4a991
                         "trigger_list": [
                             {
                                 "trigger": "install_slack",
@@ -997,7 +1088,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Sophos Endpoint Services (Local)",
-                        "icon": "c05d087189f0b25a94f02eeb43b0c5c928e5e378f2168f603554bce2b5c71209",
+                        "icon": "0f68be689684a00a3a054d71a31e43e2362f96c16efa5a560fb61bc1bf41901c",
                         "progresstext": "Locally validating Sophos Endpoint services …",
                         "trigger_list": [
                             {
@@ -1008,7 +1099,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Palo Alto GlobalProtect",
-                        "icon": "ea794c5a1850e735179c7c60919e3b51ed3ed2b301fe3f0f27ad5ebd394a2e4b",
+                        "icon": "acbf39d8904ad1a772cf71c45d93e373626d379a24f8b1283b88134880acb8ef",
                         "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
                         "trigger_list": [
                             {
@@ -1129,7 +1220,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Sophos Endpoint Services (Local)",
-                        "icon": "c05d087189f0b25a94f02eeb43b0c5c928e5e378f2168f603554bce2b5c71209",
+                        "icon": "0f68be689684a00a3a054d71a31e43e2362f96c16efa5a560fb61bc1bf41901c",
                         "progresstext": "Locally validating Sophos Endpoint services …",
                         "trigger_list": [
                             {
@@ -1140,7 +1231,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Sophos Endpoint Services (Remote)",
-                        "icon": "c05d087189f0b25a94f02eeb43b0c5c928e5e378f2168f603554bce2b5c71209",
+                        "icon": "0f68be689684a00a3a054d71a31e43e2362f96c16efa5a560fb61bc1bf41901c",
                         "progresstext": "Remotely validating Sophos Endpoint services …",
                         "trigger_list": [
                             {
@@ -1151,7 +1242,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Palo Alto GlobalProtect",
-                        "icon": "ea794c5a1850e735179c7c60919e3b51ed3ed2b301fe3f0f27ad5ebd394a2e4b",
+                        "icon": "acbf39d8904ad1a772cf71c45d93e373626d379a24f8b1283b88134880acb8ef",
                         "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
                         "trigger_list": [
                             {
@@ -1259,10 +1350,17 @@ function policyJSONConfiguration() {
                 ]
             }
             '
+<<<<<<< HEAD
         ;;
         
         * ) # Catch-all (i.e., used when `welcomeDialog` is set to `video` or `false`)
             
+=======
+            ;;
+
+        * ) # Catch-all (i.e., used when `welcomeDialog` is set to `video`, `messageOnly` or `false`)
+
+>>>>>>> 838d71e55027bbd34a7f73497d1f8187ebf4a991
             policyJSON='
             {
                 "steps": [
@@ -1370,9 +1468,15 @@ function policyJSONConfiguration() {
                     },
                     
                     {
+<<<<<<< HEAD
                         "listitem": "Slack",
                         "icon": "a1ecbe1a4418113177cc061def4996d20a01a1e9b9adf9517899fcca31f3c026",
                         "progresstext": "Install Slack Messaging System",
+=======
+                        "listitem": "Palo Alto GlobalProtect",
+                        "icon": "acbf39d8904ad1a772cf71c45d93e373626d379a24f8b1283b88134880acb8ef",
+                        "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
+>>>>>>> 838d71e55027bbd34a7f73497d1f8187ebf4a991
                         "trigger_list": [
                             {
                                 "trigger": "install_slack",
@@ -1486,7 +1590,7 @@ dialogFailureCMD="$dialogBinary \
 --icon \"$failureIcon\" \
 --iconsize 125 \
 --width 625 \
---height 525 \
+--height 45% \
 --position topright \
 --button1text \"Close\" \
 --infotext \"$scriptVersion\" \
@@ -1756,9 +1860,11 @@ function finalise(){
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 function get_json_value() {
+    # set -x
     JSON="$1" osascript -l 'JavaScript' \
         -e 'const env = $.NSProcessInfo.processInfo.environment.objectForKey("JSON").js' \
         -e "JSON.parse(env).$2"
+    # set +x
 }
 
 
@@ -1768,10 +1874,12 @@ function get_json_value() {
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 function get_json_value_welcomeDialog() {
+    # set -x
     for var in "${@:2}"; do jsonkey="${jsonkey}['${var}']"; done
     JSON="$1" osascript -l 'JavaScript' \
         -e 'const env = $.NSProcessInfo.processInfo.environment.objectForKey("JSON").js' \
         -e "JSON.parse(env)$jsonkey"
+    # set +x
 }
 
 
@@ -1788,14 +1896,14 @@ function run_jamf_trigger() {
 
     if [[ "${debugMode}" == "true" ]] || [[ "${debugMode}" == "verbose" ]] ; then
 
-        updateScriptLog "SETUP YOUR MAC DIALOG: DEBUG MODE: TRIGGER: $jamfBinary policy -event $trigger"
+        updateScriptLog "SETUP YOUR MAC DIALOG: DEBUG MODE: TRIGGER: $jamfBinary policy -event $trigger ${suppressRecon}"
         sleep "${debugModeSleepAmount}"
 
     else
 
         updateScriptLog "SETUP YOUR MAC DIALOG: RUNNING: $jamfBinary policy -event $trigger"
-        eval "${jamfBinary} policy -event ${trigger}"                                     # Add comment for policy testing
-        # eval "${jamfBinary} policy -event ${trigger} -verbose | tee -a ${scriptLog}"    # Remove comment for policy testing
+        eval "${jamfBinary} policy -event ${trigger} ${suppressRecon}"                                     # Add comment for policy testing
+        # eval "${jamfBinary} policy -event ${trigger} ${suppressRecon} -verbose | tee -a ${scriptLog}"    # Remove comment for policy testing
 
     fi
 
@@ -1814,6 +1922,7 @@ function confirmPolicyExecution() {
     trigger="${1}"
     validation="${2}"
     updateScriptLog "SETUP YOUR MAC DIALOG: Confirm Policy Execution: '${trigger}' '${validation}'"
+    if [ "${suppressReconOnPolicy}" == "true" ]; then suppressRecon="-forceNoRecon"; fi
 
     case ${validation} in
 
@@ -2268,6 +2377,18 @@ function completionAction() {
 
     fi
 
+    # Remove custom welcomeBannerImage
+    if [[ -e ${welcomeBannerImage} ]]; then
+        updateScriptLog "COMPLETION ACTION: Removing ${welcomeBannerImage} …"
+        rm "${welcomeBannerImage}"
+    fi
+
+    # Remove overlayicon
+    if [[ -e ${overlayicon} ]]; then
+        updateScriptLog "COMPLETION ACTION: Removing ${overlayicon} …"
+        rm "${overlayicon}"
+    fi
+
     exit "${exitCode}"
 
 }
@@ -2348,7 +2469,7 @@ function checkNetworkQualityConfigurations() {
             dlEndDate="N/A; macOS ${osVersion}"
             ;;
 
-        12* | 13* )
+        12* | 13* | 14*)
             dlThroughput=$( get_json_value "$networkQualityTest" "dl_throughput")
             dlResponsiveness=$( get_json_value "$networkQualityTest" "dl_responsiveness" )
             dlStartDate=$( get_json_value "$networkQualityTest" "start_date" )
@@ -2360,15 +2481,15 @@ function checkNetworkQualityConfigurations() {
     mbps=$( echo "scale=2; ( $dlThroughput / 1000000 )" | bc )
     updateScriptLog "WELCOME DIALOG: $mbps (Mbps)"
 
-    configurationOneEstimatedSeconds=$( echo "scale=2; (((( $configurationOneSize / $mbps ) * 60 ) * 60 ) * $correctionCoefficient )" | bc | sed 's/\.[0-9]*//' )
+    configurationOneEstimatedSeconds=$( echo "scale=2; ((((( $configurationOneSize / $mbps ) * 60 ) * 60 ) * $correctionCoefficient ) + $configurationOneInstallBuffer)" | bc | sed 's/\.[0-9]*//' )
     updateScriptLog "WELCOME DIALOG: Configuration One Estimated Seconds: $configurationOneEstimatedSeconds"
     updateScriptLog "WELCOME DIALOG: Configuration One Estimate: $(printf '%dh:%dm:%ds\n' $((configurationOneEstimatedSeconds/3600)) $((configurationOneEstimatedSeconds%3600/60)) $((configurationOneEstimatedSeconds%60)))"
 
-    configurationTwoEstimatedSeconds=$( echo "scale=2; (((( $configurationTwoSize / $mbps ) * 60 ) * 60 ) * $correctionCoefficient )" | bc | sed 's/\.[0-9]*//' )
+    configurationTwoEstimatedSeconds=$( echo "scale=2; ((((( $configurationTwoSize / $mbps ) * 60 ) * 60 ) * $correctionCoefficient ) + $configurationTwoInstallBuffer)" | bc | sed 's/\.[0-9]*//' )
     updateScriptLog "WELCOME DIALOG: Configuration Two Estimated Seconds: $configurationTwoEstimatedSeconds"
     updateScriptLog "WELCOME DIALOG: Configuration Two Estimate: $(printf '%dh:%dm:%ds\n' $((configurationTwoEstimatedSeconds/3600)) $((configurationTwoEstimatedSeconds%3600/60)) $((configurationTwoEstimatedSeconds%60)))"
 
-    configurationThreeEstimatedSeconds=$( echo "scale=2; (((( $configurationThreeSize / $mbps ) * 60 ) * 60 ) * $correctionCoefficient )" | bc | sed 's/\.[0-9]*//' )
+    configurationThreeEstimatedSeconds=$( echo "scale=2; ((((( $configurationThreeSize / $mbps ) * 60 ) * 60 ) * $correctionCoefficient ) + $configurationThreeInstallBuffer)" | bc | sed 's/\.[0-9]*//' )
     updateScriptLog "WELCOME DIALOG: Configuration Three Estimated Seconds: $configurationThreeEstimatedSeconds"
     updateScriptLog "WELCOME DIALOG: Configuration Three Estimate: $(printf '%dh:%dm:%ds\n' $((configurationThreeEstimatedSeconds/3600)) $((configurationThreeEstimatedSeconds%3600/60)) $((configurationThreeEstimatedSeconds%60)))"
 
@@ -2407,7 +2528,7 @@ function checkNetworkQualityCatchAllConfiguration() {
             dlEndDate="N/A; macOS ${osVersion}"
             ;;
 
-        12* | 13* )
+        12* | 13* | 14*)
             dlThroughput=$( get_json_value "$networkQualityTest" "dl_throughput")
             dlResponsiveness=$( get_json_value "$networkQualityTest" "dl_responsiveness" )
             dlStartDate=$( get_json_value "$networkQualityTest" "start_date" )
@@ -2419,7 +2540,7 @@ function checkNetworkQualityCatchAllConfiguration() {
     mbps=$( echo "scale=2; ( $dlThroughput / 1000000 )" | bc )
     updateScriptLog "SETUP YOUR MAC DIALOG: $mbps (Mbps)"
 
-    configurationCatchAllEstimatedSeconds=$( echo "scale=2; (((( $configurationCatchAllSize / $mbps ) * 60 ) * 60 ) * $correctionCoefficient )" | bc | sed 's/\.[0-9]*//' )
+    configurationCatchAllEstimatedSeconds=$( echo "scale=2; ((((( $configurationCatchAllSize / $mbps ) * 60 ) * 60 ) * $correctionCoefficient ) + $configurationCatchAllInstallBuffer)" | bc | sed 's/\.[0-9]*//' )
     updateScriptLog "SETUP YOUR MAC DIALOG: Catch-all Configuration Estimated Seconds: $configurationCatchAllEstimatedSeconds"
     updateScriptLog "SETUP YOUR MAC DIALOG: Catch-all Configuration Estimate: $(printf '%dh:%dm:%ds\n' $((configurationCatchAllEstimatedSeconds/3600)) $((configurationCatchAllEstimatedSeconds%3600/60)) $((configurationCatchAllEstimatedSeconds%60)))"
 
@@ -2616,13 +2737,7 @@ function quitScript() {
     killProcess "caffeinate"
 
     # Toggle `jamf` binary check-in 
-    toggleJamfLaunchDaemon
-
-    # Remove overlayicon
-    if [[ -e ${overlayicon} ]]; then
-        updateScriptLog "QUIT SCRIPT: Removing ${overlayicon} …"
-        rm "${overlayicon}"
-    fi
+    # toggleJamfLaunchDaemon
     
     # Remove welcomeCommandFile
     if [[ -e ${welcomeCommandFile} ]]; then
@@ -2650,11 +2765,27 @@ function quitScript() {
 
     # Check for user clicking "Quit" at Welcome dialog
     if [[ "${welcomeReturnCode}" == "2" ]]; then
+        
+        # Remove custom welcomeBannerImage
+        if [[ -e ${welcomeBannerImage} ]]; then
+            updateScriptLog "COMPLETION ACTION: Removing ${welcomeBannerImage} …"
+            rm "${welcomeBannerImage}"
+        fi
+
+        # Remove overlayicon
+        if [[ -e ${overlayicon} ]]; then
+            updateScriptLog "COMPLETION ACTION: Removing ${overlayicon} …"
+            rm "${overlayicon}"
+        fi
+        
         exitCode="1"
         exit "${exitCode}"
+    
     else
+    
         updateScriptLog "QUIT SCRIPT: Executing Completion Action Option: '${completionActionOption}' …"
         completionAction "${completionActionOption}"
+    
     fi
 
 }
@@ -2709,6 +2840,53 @@ if [[ "${welcomeDialog}" == "video" ]]; then
     eval "${dialogSetupYourMacCMD[*]}" & sleep 0.3
     dialogUpdateSetupYourMac "activate:"
 
+elif [[ "${welcomeDialog}" == "messageOnly" ]]; then
+
+    outputLineNumberInVerboseDebugMode
+
+    updateScriptLog "WELCOME DIALOG: Displaying ${welcomeDialog} …"
+
+    # Construct `welcomeJSON`, sans `textfield` and `selectitems`
+    welcomeJSON='
+    {
+        "commandfile" : "'"${welcomeCommandFile}"'",
+        "bannerimage" : "'"${welcomeBannerImage}"'",
+        "bannertext" : "'"${welcomeBannerText}"'",
+        "title" : "'"${welcomeTitle}"'",
+        "message" : "'"${welcomeMessage}"'",
+        "icon" : "'"${welcomeIcon}"'",
+        "infobox" : "",
+        "iconsize" : "198.0",
+        "button1text" : "Continue",
+        "button2text" : "Quit",
+        "infotext" : "'"${scriptVersion}"'",
+        "blurscreen" : "true",
+        "ontop" : "true",
+        "titlefont" : "shadow=true, size=36, colour=#FFFDF4",
+        "messagefont" : "size=14",
+        "height" : "700"
+    }
+    '
+
+    # Write Welcome JSON to disk
+    echo "$welcomeJSON" > "$welcomeJSONFile"
+
+    # Display Welcome dialog
+    eval "${dialogBinary} --jsonfile ${welcomeJSONFile} --json"
+
+    # Set Configuration
+    if [[ -n "${presetConfiguration}" ]]; then
+        symConfiguration="${presetConfiguration}"
+    else
+        symConfiguration="Catch-all (messageOnly)"
+    fi
+    updateScriptLog "WELCOME DIALOG: Using ${symConfiguration} Configuration …"
+    policyJSONConfiguration
+
+    # Display main SYM dialog
+    eval "${dialogSetupYourMacCMD[*]}" & sleep 0.3
+    dialogUpdateSetupYourMac "activate:"
+
 elif [[ "${welcomeDialog}" == "userInput" ]]; then
 
     outputLineNumberInVerboseDebugMode
@@ -2759,8 +2937,11 @@ elif [[ "${welcomeDialog}" == "userInput" ]]; then
 
             computerName=$(get_json_value_welcomeDialog "$welcomeResults" "Computer Name")
             userName=$(get_json_value_welcomeDialog "$welcomeResults" "User Name")
+            realName=$(get_json_value_welcomeDialog "$welcomeResults" "Full Name")
+            email=$(get_json_value_welcomeDialog "$welcomeResults" "E-mail")
             assetTag=$(get_json_value_welcomeDialog "$welcomeResults" "Asset Tag")
             symConfiguration=$(get_json_value_welcomeDialog "$welcomeResults" "Configuration" "selectedValue")
+            if [ -n "$presetConfiguration" ]; then symConfiguration="${presetConfiguration}"; fi
             department=$(get_json_value_welcomeDialog "$welcomeResults" "Department" "selectedValue" | grep -v "Please select your department" )
             room=$(get_json_value_welcomeDialog "$welcomeResults" "Room")
             building=$(get_json_value_welcomeDialog "$welcomeResults" "Building" "selectedValue" | grep -v "Please select your building" )
@@ -2772,6 +2953,8 @@ elif [[ "${welcomeDialog}" == "userInput" ]]; then
 
             updateScriptLog "WELCOME DIALOG: • Computer Name: $computerName"
             updateScriptLog "WELCOME DIALOG: • User Name: $userName"
+            updateScriptLog "WELCOME DIALOG: • Real Name: $realName"
+            updateScriptLog "WELCOME DIALOG: • E-mail: $email"
             updateScriptLog "WELCOME DIALOG: • Asset Tag: $assetTag"
             updateScriptLog "WELCOME DIALOG: • Configuration: $symConfiguration"
             updateScriptLog "WELCOME DIALOG: • Department: $department"
@@ -2845,6 +3028,18 @@ elif [[ "${welcomeDialog}" == "userInput" ]]; then
                 reconOptions+="-assetTag \"${assetTag}\" "
             fi
 
+            # Real Name
+            if [[ -n "${realName}" ]]; then
+                # UNTESTED, UNSUPPORTED "YOYO" EXAMPLE
+                reconOptions+="-realname \"${realName}\" "
+            fi
+            
+            # E-mail
+            if [[ -n "${email}" ]]; then
+                # UNTESTED, UNSUPPORTED "YOYO" EXAMPLE
+                reconOptions+="-email \"${email}\" "
+            fi
+            
             # Department
             if [[ -n "${department}" ]]; then
                 # UNTESTED, UNSUPPORTED "YOYO" EXAMPLE
@@ -3042,7 +3237,7 @@ if [[ -n ${department} ]]; then infobox+="**Department:**  \n$department  \n\n" 
 if [[ -n ${building} ]]; then infobox+="**Building:**  \n$building  \n\n" ; fi
 if [[ -n ${room} ]]; then infobox+="**Room:**  \n$room  \n\n" ; fi
 
-if [[ "${promptForConfiguration}" != "true" ]] || [[ "${welcomeDialog}" == "false" ]]; then
+if { [[ "${promptForConfiguration}" != "true" ]] && [[ "${configurationDownloadEstimation}" == "true" ]]; } || { [[ "${welcomeDialog}" == "false" ]] || [[ "${welcomeDialog}" == "messageOnly" ]]; } then
     updateScriptLog "SETUP YOUR MAC DIALOG: Purposely NOT updating 'infobox'"
 else
     updateScriptLog "SETUP YOUR MAC DIALOG: Updating 'infobox'"
