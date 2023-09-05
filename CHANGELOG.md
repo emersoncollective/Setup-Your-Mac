@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## 1.12.6
+### 30-Aug-2023
+- Reverted `mktemp`-created files to pre-SYM `1.12.1` behaviour
+- Updated required version of swiftDialog to `2.3.2.4726`
+
+## 1.12.5
+### 28-Aug-2023
+- Added `sleep "${debugModeSleepAmount}"` to `recon` validation
+
+## 1.12.4
+### 26-Aug-2023
+- `toggleJamfLaunchDaemon` (during `quitScript` function) based on `completionActionOption` ([Pull Request No. 89](https://github.com/dan-snelson/Setup-Your-Mac/pull/89); thanks for another one, @TechTrekkie!)
+
+## 1.12.3
+### 23-Aug-2023
+- Changed `dialogURL` to new GitHub Repo ([Pull Request No. 88](https://github.com/dan-snelson/Setup-Your-Mac/pull/88); thanks yet again, @drtaru!)
+
+## 1.12.2
+### 22-Aug-2023
+- Updated minimum version of macOS to 12
+- Corrected deletion of cached welcomeBannerImage
+
 ## 1.12.1
 ### 21-Aug-2023
 - Added permissions correction on ALL `mktemp`-created files (for swiftDialog `2.3.1`)

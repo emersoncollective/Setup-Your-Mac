@@ -38,6 +38,23 @@
 #   - Added permissions correction on ALL `mktemp`-created files (for swiftDialog `2.3.1`)
 #   - Updated required version of swiftDialog to `2.3.1.4721`
 #
+#   Version 1.12.2, 22-Aug-2023, Dan K. Snelson (@dan-snelson)
+#   - Updated minimum version of macOS to 12
+#   - Corrected deletion of cached welcomeBannerImage
+#
+#   Version 1.12.3, 23-Aug-2023, Dan K. Snelson (@dan-snelson)
+#   - Changed `dialogURL` to new GitHub Repo ([Pull Request No. 88](https://github.com/dan-snelson/Setup-Your-Mac/pull/88); thanks yet again, @drtaru!)
+#
+#   Version 1.12.4, 26-Aug-2023, Dan K. Snelson (@dan-snelson)
+#   - `toggleJamfLaunchDaemon` (during `quitScript` function) based on `completionActionOption` ([Pull Request No. 89](https://github.com/dan-snelson/Setup-Your-Mac/pull/89); thanks for another one, @TechTrekkie!)
+#
+#   Version 1.12.5, 28-Aug-2023, Dan K. Snelson (@dan-snelson)
+#   - Added `sleep "${debugModeSleepAmount}"` to `recon` validation
+#
+#   Version 1.12.6, 30-Aug-2023, Dan K. Snelson (@dan-snelson)
+#   - Reverted `mktemp`-created files to pre-SYM `1.12.1` behaviour
+#   - Updated required version of swiftDialog to `2.3.2.4726`
+#
 ####################################################################################################
 
 
@@ -52,7 +69,7 @@
 # Script Version and Jamf Pro Script Parameters
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="1.12.1"
+scriptVersion="1.12.6"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
 debugMode="${5:-"true"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
@@ -286,8 +303,8 @@ if [[ "${requiredMinimumBuild}" == "disabled" ]]; then
 
 else
 
-    # Since swiftDialog requires at least macOS 11 Big Sur, first confirm the major OS version
-    if [[ "${osMajorVersion}" -ge 11 ]] ; then
+    # Since swiftDialog requires at least macOS 12 Monterey, first confirm the major OS version
+    if [[ "${osMajorVersion}" -ge 12 ]] ; then
 
         updateScriptLog "PRE-FLIGHT CHECK: macOS ${osMajorVersion} installed; checking build version ..."
 
@@ -306,10 +323,10 @@ else
 
         fi
 
-    # The Mac is running an operating system older than macOS 11 Big Sur; exit with error
+    # The Mac is running an operating system older than macOS 12 Monterey; exit with error
     else
 
-        updateScriptLog "PRE-FLIGHT CHECK: swiftDialog requires at least macOS 11 Big Sur and this Mac is running ${osVersion} (${osBuild}), exiting with error."
+        updateScriptLog "PRE-FLIGHT CHECK: swiftDialog requires at least macOS 12 Monterey and this Mac is running ${osVersion} (${osBuild}), exiting with error."
         osascript -e 'display dialog "Please advise your Support Representative of the following error:\r\rExpected macOS Build '${requiredMinimumBuild}' (or newer), but found macOS '${osVersion}' ('${osBuild}').\r\r" with title "Setup Your Mac: Detected Outdated Operating System" buttons {"Open Software Update"} with icon caution'
         updateScriptLog "PRE-FLIGHT CHECK: Executing /usr/bin/open '${outdatedOsAction}' …"
         su - "${loggedInUser}" -c "/usr/bin/open \"${outdatedOsAction}\""
@@ -395,7 +412,7 @@ toggleJamfLaunchDaemon
 function dialogInstall() {
 
     # Get the URL of the latest PKG From the Dialog GitHub repo
-    dialogURL=$(curl --silent --fail "https://api.github.com/repos/bartreardon/swiftDialog/releases/latest" | awk -F '"' "/browser_download_url/ && /pkg\"/ { print \$4; exit }")
+    dialogURL=$(curl -L --silent --fail "https://api.github.com/repos/swiftDialog/swiftDialog/releases/latest" | awk -F '"' "/browser_download_url/ && /pkg\"/ { print \$4; exit }")
 
     # Expected Team ID of the downloaded PKG
     expectedDialogTeamID="PWA5E9TQ59"
@@ -451,9 +468,9 @@ function dialogCheck() {
     else
 
         dialogVersion=$(/usr/local/bin/dialog --version)
-        if [[ "${dialogVersion}" < "2.3.1.4721" ]]; then
+        if [[ "${dialogVersion}" < "2.3.2.4726" ]]; then
             
-            updateScriptLog "PRE-FLIGHT CHECK: swiftDialog version ${dialogVersion} found but swiftDialog 2.3.0.4718 or newer is required; updating..."
+            updateScriptLog "PRE-FLIGHT CHECK: swiftDialog version ${dialogVersion} found but swiftDialog 2.3.2.4726 or newer is required; updating..."
             dialogInstall
             
         else
@@ -513,14 +530,10 @@ esac
 
 jamfBinary="/usr/local/bin/jamf"
 dialogBinary="/usr/local/bin/dialog"
-welcomeJSONFile=$( mktemp /var/tmp/welcomeJSONFile.XXX )
-welcomeCommandFile=$( mktemp /var/tmp/dialogCommandFileWelcome.XXX )
-setupYourMacCommandFile=$( mktemp /var/tmp/dialogCommandFileSetupYourMac.XXX )
-failureCommandFile=$( mktemp /var/tmp/dialogCommandFileFailure.XXX )
-
-# Set permissions on Dialog Files
-chmod -v 666 "${welcomeJSONFile}"
-chmod -v 666 /var/tmp/dialogCommandFile*
+welcomeJSONFile=$( mktemp -u /var/tmp/welcomeJSONFile.XXX )
+welcomeCommandFile=$( mktemp -u /var/tmp/dialogCommandFileWelcome.XXX )
+setupYourMacCommandFile=$( mktemp -u /var/tmp/dialogCommandFileSetupYourMac.XXX )
+failureCommandFile=$( mktemp -u /var/tmp/dialogCommandFileFailure.XXX )
 
 
 
@@ -544,12 +557,12 @@ else
     welcomeMessage=${welcomeMessage//", select your preferred **Configuration**"/}
 fi
 
-
 if [[ -n "${brandingBanner}" ]]; then
     welcomeBannerImage="${brandingBanner}"
 else
     welcomeBannerImage="https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg"
 fi
+
 if [[ "${brandingBannerDisplayText}" == "true" ]]; then welcomeBannerText="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}";
 else welcomeBannerText=""; fi
 welcomeCaption="Please review the above video, then click Continue."
@@ -1945,6 +1958,7 @@ function confirmPolicyExecution() {
             updateScriptLog "SETUP YOUR MAC DIALOG: Confirm Policy Execution: ${validation}"
             if [[ "${debugMode}" == "true" ]] || [[ "${debugMode}" == "verbose" ]] ; then
                 updateScriptLog "SETUP YOUR MAC DIALOG: DEBUG MODE: Set 'debugMode' to false to update computer inventory with the following 'reconOptions': \"${reconOptions}\" …"
+                sleep "${debugModeSleepAmount}"
             else
                 updateScriptLog "SETUP YOUR MAC DIALOG: Updating computer inventory with the following 'reconOptions': \"${reconOptions}\" …"
                 dialogUpdateSetupYourMac "listitem: index: $i, status: wait, statustext: Updating …, "
@@ -2363,10 +2377,10 @@ function completionAction() {
 
     fi
 
-    # Remove custom welcomeBannerImage
-    if [[ -e ${welcomeBannerImage} ]]; then
-        updateScriptLog "COMPLETION ACTION: Removing ${welcomeBannerImage} …"
-        rm "${welcomeBannerImage}"
+    # Remove custom welcomeBannerImageFileName
+    if [[ -e "/var/tmp/${welcomeBannerImageFileName}" ]]; then
+        updateScriptLog "COMPLETION ACTION: Removing /var/tmp/${welcomeBannerImageFileName} …"
+        rm "/var/tmp/${welcomeBannerImageFileName}"
     fi
 
     # Remove overlayicon
@@ -2723,7 +2737,9 @@ function quitScript() {
     killProcess "caffeinate"
 
     # Toggle `jamf` binary check-in 
-    # toggleJamfLaunchDaemon
+    if [[ "${completionActionOption}" == "Log Out"* ]] || [[ "${completionActionOption}" == "Sleep"* ]] || [[ "${completionActionOption}" == "Quit" ]] || [[ "${completionActionOption}" == "wait" ]] ; then
+		toggleJamfLaunchDaemon
+	fi
     
     # Remove welcomeCommandFile
     if [[ -e ${welcomeCommandFile} ]]; then
@@ -2752,10 +2768,10 @@ function quitScript() {
     # Check for user clicking "Quit" at Welcome dialog
     if [[ "${welcomeReturnCode}" == "2" ]]; then
         
-        # Remove custom welcomeBannerImage
-        if [[ -e ${welcomeBannerImage} ]]; then
-            updateScriptLog "COMPLETION ACTION: Removing ${welcomeBannerImage} …"
-            rm "${welcomeBannerImage}"
+        # Remove custom welcomeBannerImageFileName
+        if [[ -e "/var/tmp/${welcomeBannerImageFileName}" ]]; then
+            updateScriptLog "COMPLETION ACTION: Removing /var/tmp/${welcomeBannerImageFileName} …"
+            rm "/var/tmp/${welcomeBannerImageFileName}"
         fi
 
         # Remove overlayicon
