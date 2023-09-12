@@ -72,7 +72,7 @@
 scriptVersion="1.12.6"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
-debugMode="${5:-"true"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
+debugMode="${5:-"false"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
 completionActionOption="${7:-"wait"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
 requiredMinimumBuild="${8:-"disabled"}"                                         # Parameter 8: Required Minimum Build [ disabled (default) | 22E ] (i.e., Your organization's required minimum build of macOS to allow users to proceed; use "22E" for macOS 13.3)
@@ -86,7 +86,7 @@ presetConfiguration="${11:-"Required"}"                                         
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 debugModeSleepAmount="3"    # Delay for various actions when running in Debug Mode
-failureDialog="true"        # Display the so-called "Failure" dialog (after the main SYM dialog) [ true | false ]
+failureDialog="false"        # Display the so-called "Failure" dialog (after the main SYM dialog) [ true | false ]
 
 
 
@@ -132,12 +132,12 @@ brandingIconLight="https://cdn-icons-png.flaticon.com/512/979/979585.png"
 brandingIconDark="https://cdn-icons-png.flaticon.com/512/740/740878.png"
 
 # IT Support Variables - Use these if the default text is fine but you want your org's info inserted instead
-supportTeamName="Help Desk"
-supportTeamPhone="+1 (801) 555-1212"
-supportTeamEmail="support@domain.org"
-supportKB="KB86753099"
-supportTeamErrorKB=", and mention [${supportKB}](https://servicenow.company.com/support?id=kb_article_view&sysparm_article=${supportKB}#Failures)"
-supportTeamHelpKB="\n- **Knowledge Base Article:** ${supportKB}"
+supportTeamName="IT Help Desk"
+#supportTeamPhone=""
+supportTeamEmail="ithelp@emersoncollective.com"
+supportKB="New Computer Set Up Guide"
+supportTeamErrorKB=", and mention [${supportKB}](https://emersoncollective.zendesk.com/hc/en-us/articles/12939465994139-New-Computer-Set-Up-Guide#h_01GSB7EE8JGABB1NN84WNNK12N)"
+supportTeamHelpKB="\n- **Help Center Article:** ${supportKB}"
 
 
 
@@ -549,7 +549,7 @@ failureCommandFile=$( mktemp -u /var/tmp/dialogCommandFileFailure.XXX )
 
 welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}"
 
-welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}.  \n\nIf you need assistance, please contact the ${supportTeamName} at  \n${supportTeamPhone} and mention ${supportKB}.  \n\n---"
+welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}.  \n\nIf you need assistance, please contact the ${supportTeamName} at  \n and mention ${supportKB}.  \n\n---"
 
 if { [[ "${promptForConfiguration}" == "true" ]] && [[ "${welcomeDialog}" != "messageOnly" ]]; } then
     welcomeMessage+="  \n\n#### Configurations  \n- **${configurationOneName}:** ${configurationOneDescription}  \n- **${configurationTwoName}:** ${configurationTwoDescription}  \n- **${configurationThreeName}:** ${configurationThreeDescription}"
@@ -743,7 +743,7 @@ fi
 if [[ "${brandingBannerDisplayText}" == "true" ]] ; then bannerText="Setting up ${loggedInUserFirstname}‘s ${modelName}";
 else bannerText=""; fi
 
-helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n- **Telephone:** ${supportTeamPhone}  \n- **Email:** ${supportTeamEmail}  ${supportTeamHelpKB}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
+helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n- **Email:** ${supportTeamEmail}  ${supportTeamHelpKB}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
 infobox="Analyzing input …" # Customize at "Update Setup Your Mac's infobox"
 
 # Check if the custom bannerImage is available, and if not, use a alternative image
@@ -779,9 +779,7 @@ dialogSetupYourMacCMD="$dialogBinary \
 --bannertext \"$bannerText\" \
 --title \"$title\" \
 --message \"$message\" \
---helpmessage \"$helpmessage\" \
 --icon \"$icon\" \
---infobox \"${infobox}\" \
 --progress \
 --moveable \
 --progresstext \"Initializing configuration …\" \
@@ -867,28 +865,24 @@ function policyJSONConfiguration() {
                             {
                                 "trigger": "install_rosetta",
                                 "validation": "None"
-                            },
-                            {
-                                "trigger": "install_rosetta",
-                                "validation": "Local"
-                            }            
-                        ]
+                            }
+                            ]
                     },
                     
                     {
                         "listitem": "Code42",
-                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "icon": "0e94b0cca7ef6a747d0fd612f3af78b3757f3deb22d47372f21053da55699698",
                         "progresstext": "Install the EC Data Protection and Backup Software",
                         "trigger_list": [
                             {
-                                "trigger": "'install_code42_${type}'",
+                                "trigger": "install_code42",
                                 "validation": "/Applications/Code42.app/Contents/Info.plist"
                             }
                         ]
                     },
                     {
                         "listitem": "Crowdstrike Falcon",
-                        "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
+                        "icon": "b2f14d19281db623e292ba0e1e68aef0584e3b7e1803bd31b13be6780df7e75b",
                         "progresstext": "Install The Computer Security Software",
                         "trigger_list": [
                             {
@@ -896,17 +890,7 @@ function policyJSONConfiguration() {
                                 "validation": "/Applications/Falcon.app/Contents/Info.plist"
                             }
                         ]
-                    },        {
-                        "listitem": "Enable Filevault 2",
-                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
-                        "progresstext": "Install and Configure macOS FileVault 2.",
-                        "trigger_list": [
-                            {
-                                "trigger": "enable_filevault",
-                                "validation": "Local"
-                            }
-                        ]
-                    },
+                    },     
                     {
                         "listitem": "Microsoft Office 365",
                         "icon": "66e495c8ac8f827b600b4bd78976b4e023650791f5bcdcd90e08a4d01a2a469f",
@@ -922,9 +906,6 @@ function policyJSONConfiguration() {
                         "listitem": "Zoom",
                         "icon": "be66420495a3f2f1981a49a0e0ad31783e9a789e835b4196af60554bf4c115ac",
                         "progresstext": "Zoom is a videotelephony software program developed by Zoom Video Communications.",
-                        "listitem": "Sophos Endpoint Services (Remote)",
-                        "icon": "0f68be689684a00a3a054d71a31e43e2362f96c16efa5a560fb61bc1bf41901c",
-                        "progresstext": "Remotely validating Sophos Endpoint services …",
                         "trigger_list": [
                             {
                                 "trigger": "install_zoom",
@@ -957,9 +938,6 @@ function policyJSONConfiguration() {
                         "listitem": "Slack",
                         "icon": "a1ecbe1a4418113177cc061def4996d20a01a1e9b9adf9517899fcca31f3c026",
                         "progresstext": "Install Slack Messaging System",
-                        "listitem": "Palo Alto GlobalProtect",
-                        "icon": "acbf39d8904ad1a772cf71c45d93e373626d379a24f8b1283b88134880acb8ef",
-                        "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
                         "trigger_list": [
                             {
                                 "trigger": "install_slack",
@@ -983,14 +961,14 @@ function policyJSONConfiguration() {
                         "progresstext": "Ensure that Collective data is accessed by approved devices.",
                         "trigger_list": [
                             {
-                                "trigger": "'okta_cba_${cpu}'",
-                                "validation": "Local"
+                                "trigger": "okta_cba",
+                                "validation": "None"
                             }
                         ]
                     },
                     {
                         "listitem": "Crowdstrike Running Validation",
-                        "icon": "5dbbf8eebbecb20ac443f958bfb3aa9a44ed23ce4f49005a12b29a8f33522c8b",
+                        "icon": "b2f14d19281db623e292ba0e1e68aef0584e3b7e1803bd31b13be6780df7e75b",
                         "progresstext": "Verify that the Crowdstrike Falcon agent is running",
                         "trigger_list": [
                             {
@@ -1002,7 +980,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Code42 Running Validation",
-                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "icon": "0e94b0cca7ef6a747d0fd612f3af78b3757f3deb22d47372f21053da55699698",
                         "progresstext": "Verify that the Code42 agent is running",
                         "trigger_list": [
                             {
@@ -1347,10 +1325,6 @@ function policyJSONConfiguration() {
             '
         ;;
         
-        * ) # Catch-all (i.e., used when `welcomeDialog` is set to `video` or `false`)
-            
-            ;;
-
         * ) # Catch-all (i.e., used when `welcomeDialog` is set to `video`, `messageOnly` or `false`)
 
             policyJSON='
@@ -1368,14 +1342,14 @@ function policyJSONConfiguration() {
                             },
                             {
                                 "trigger": "install_rosetta",
-                                "validation": "Local"
+                                "validation": "None"
                             }            
                         ]
                     },
                     
                     {
                         "listitem": "Code42 Backup Software",
-                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "icon": "f9b415172605a2c216fda33269b04025e7d3f2986deb08f3374bac4c1eb2b6e7",
                         "progresstext": "Install the EC Backup Software",
                         "trigger_list": [
                             {
@@ -1386,7 +1360,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Code42 Data Loss Prevention Software",
-                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "icon": "f9b415172605a2c216fda33269b04025e7d3f2986deb08f3374bac4c1eb2b6e7",
                         "progresstext": "Install the EC Data Loss Protection Software",
                         "trigger_list": [
                             {
@@ -1508,7 +1482,7 @@ function policyJSONConfiguration() {
                     },
                     {
                         "listitem": "Code42 Running Validation",
-                        "icon": "c6eea7e3663ad37c248dc6881ed97498048f502da8a427caefaf6d31963f3681",
+                        "icon": "f9b415172605a2c216fda33269b04025e7d3f2986deb08f3374bac4c1eb2b6e7",
                         "progresstext": "Verify that the Code42 agent is running",
                         "trigger_list": [
                             {
@@ -1789,7 +1763,7 @@ function finalise(){
             updateScriptLog "Jamf Pro Policy Name Failures:"
             updateScriptLog "${jamfProPolicyNameFailures}"
 
-            dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}. \n\nPlease complete the following steps:\n1. Reboot and login to your ${modelName}  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the ${supportTeamName},  \n${supportTeamPhone}${supportTeamErrorKB}. "
+            dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}. \n\nPlease complete the following steps:\n1. Reboot and login to your ${modelName}  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the ${supportTeamName},  \n${supportTeamErrorKB}. "
             dialogUpdateFailure "icon: SF=xmark.circle.fill,weight=bold,colour1=#BB1717,colour2=#F31F1F"
             dialogUpdateFailure "button1text: ${button1textCompletionActionOption}"
 
@@ -3252,21 +3226,21 @@ fi
 # Update Setup Your Mac's helpmessage
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-outputLineNumberInVerboseDebugMode
-
-if [[ "${symConfiguration}" != *"Catch-all"* ]]; then
-
-    if [[ -n ${infoboxConfiguration} ]]; then
-
-        updateScriptLog "Update 'helpmessage' with Configuration: ${infoboxConfiguration} …"
-
-        helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n- **Telephone:** ${supportTeamPhone}  \n- **Email:** ${supportTeamEmail}  \n- **Knowledge Base Article:** ${supportKB}  \n\n**Configuration:** \n- ${infoboxConfiguration}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
-        
-    fi
-
-fi
-
-dialogUpdateSetupYourMac "helpmessage: ${helpmessage}"
+#outputLineNumberInVerboseDebugMode
+#
+#if [[ "${symConfiguration}" != *"Catch-all"* ]]; then
+#
+#   if [[ -n ${infoboxConfiguration} ]]; then
+#
+#       updateScriptLog "Update 'helpmessage' with Configuration: ${infoboxConfiguration} …"
+#
+#       helpmessage="If you need assistance, please contact the ${supportTeamName}: \n- **Email:** ${supportTeamEmail}  \n- **Knowledge Base Article:** ${supportKB}  \n\n**Configuration:** \n- ${infoboxConfiguration}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
+#       
+#   fi
+#
+#fi
+#
+#dialogUpdateSetupYourMac "helpmessage: ${helpmessage}"
 
 
 
