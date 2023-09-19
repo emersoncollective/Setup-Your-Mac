@@ -132,12 +132,12 @@ brandingIconLight="https://cdn-icons-png.flaticon.com/512/979/979585.png"
 brandingIconDark="https://cdn-icons-png.flaticon.com/512/740/740878.png"
 
 # IT Support Variables - Use these if the default text is fine but you want your org's info inserted instead
-supportTeamName="IT Help Desk"
-#supportTeamPhone=""
-supportTeamEmail="ithelp@emersoncollective.com"
-supportKB="New Computer Set Up Guide"
-supportTeamErrorKB=", and mention [${supportKB}](https://emersoncollective.zendesk.com/hc/en-us/articles/12939465994139-New-Computer-Set-Up-Guide#h_01GSB7EE8JGABB1NN84WNNK12N)"
-supportTeamHelpKB="\n- **Help Center Article:** ${supportKB}"
+#supportTeamName="IT Help Desk"
+##supportTeamPhone=""
+#supportTeamEmail="ithelp@emersoncollective.com"
+#supportKB="New Computer Set Up Guide"
+#supportTeamErrorKB=", and mention [${supportKB}](https://emersoncollective.zendesk.com/hc/en-us/articles/12939465994139-New-Computer-Set-Up-Guide#h_01GSB7EE8JGABB1NN84WNNK12N)"
+#supportTeamHelpKB="\n- **Help Center Article:** ${supportKB}"
 
 
 
@@ -505,8 +505,8 @@ updateScriptLog "PRE-FLIGHT CHECK: Complete"
 # infobox-related variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-macOSproductVersion="$( sw_vers -productVersion )"
-macOSbuildVersion="$( sw_vers -buildVersion )"
+#macOSproductVersion="$( sw_vers -productVersion )"
+#macOSbuildVersion="$( sw_vers -buildVersion )"
 serialNumber=$( ioreg -rd1 -c IOPlatformExpertDevice | awk -F'"' '/IOPlatformSerialNumber/{print $4}' )
 timestamp="$( date '+%Y-%m-%d-%H%M%S' )"
 dialogVersion=$( /usr/local/bin/dialog --version )
@@ -549,7 +549,7 @@ failureCommandFile=$( mktemp -u /var/tmp/dialogCommandFileFailure.XXX )
 
 welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}"
 
-welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}.  \n\nIf you need assistance, please contact the ${supportTeamName} at  \n and mention ${supportKB}.  \n\n---"
+#welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}.  \n\nIf you need assistance, please contact the ${supportTeamName} at  \n and mention ${supportKB}.  \n\n---"
 
 if { [[ "${promptForConfiguration}" == "true" ]] && [[ "${welcomeDialog}" != "messageOnly" ]]; } then
     welcomeMessage+="  \n\n#### Configurations  \n- **${configurationOneName}:** ${configurationOneDescription}  \n- **${configurationTwoName}:** ${configurationTwoDescription}  \n- **${configurationThreeName}:** ${configurationThreeDescription}"
@@ -743,7 +743,7 @@ fi
 if [[ "${brandingBannerDisplayText}" == "true" ]] ; then bannerText="Setting up ${loggedInUserFirstname}‘s ${modelName}";
 else bannerText=""; fi
 
-helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n- **Email:** ${supportTeamEmail}  ${supportTeamHelpKB}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
+#helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n- **Email:** ${supportTeamEmail}  ${supportTeamHelpKB}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
 infobox="Analyzing input …" # Customize at "Update Setup Your Mac's infobox"
 
 # Check if the custom bannerImage is available, and if not, use a alternative image
@@ -1379,18 +1379,7 @@ function policyJSONConfiguration() {
                                 "validation": "/Applications/Falcon.app/Contents/Info.plist"
                             }
                         ]
-                    },        {
-                        "listitem": "Enable Filevault 2",
-                        "icon": "90958d0e1f8f8287a86a1198d21cded84eeea44886df2b3357d909fe2e6f1296",
-                        "progresstext": "Install and Configure macOS FileVault 2.",
-                        "trigger_list": [
-                            {
-                                "trigger": "enable_filevault",
-                                "validation": "Local"
-                            }
-                        ]
-                    },
-                    {
+                    },  {
                         "listitem": "Microsoft Office 365",
                         "icon": "66e495c8ac8f827b600b4bd78976b4e023650791f5bcdcd90e08a4d01a2a469f",
                         "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
@@ -1446,14 +1435,27 @@ function policyJSONConfiguration() {
                                 "validation": "/Applications/Slack.app/Contents/Info.plist"
                             }
                         ]
-                    },
-                    {
-                        "listitem": "Google Drive",
-                        "icon": "a6954a50da661bd785407e23f83c6a1ac27006180eae1813086e64f4d6e65dcc",
-                        "progresstext": "The Preferred Cloud Storage Of The Collective.",
+                    },                    {
+                        "listitem": "Slack",
+                        "icon": "a1ecbe1a4418113177cc061def4996d20a01a1e9b9adf9517899fcca31f3c026",
+                        "progresstext": "Install Slack Messaging System",
+                        "listitem": "Palo Alto GlobalProtect",
+                        "icon": "acbf39d8904ad1a772cf71c45d93e373626d379a24f8b1283b88134880acb8ef",
+                        "progresstext": "Use Palo Alto GlobalProtect to establish a Virtual Private Network (VPN) connection to Church headquarters.",
                         "trigger_list": [
                             {
-                                "trigger": "install_google_drive",
+                                "trigger": "install_slack",
+                                "validation": "/Applications/Slack.app/Contents/Info.plist"
+                            }
+                        ]
+                    },
+                    {
+                        "listitem": "Software Update Tools",
+                        "icon": "a6954a50da661bd785407e23f83c6a1ac27006180eae1813086e64f4d6e65dcc",
+                        "progresstext": "EC IT will keep your computer up to date.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_nudge",
                                 "validation": "/Applications/Google Drive.app/Contents/Info.plist"
                             }
                         ]
@@ -1463,7 +1465,7 @@ function policyJSONConfiguration() {
                         "progresstext": "Ensure that Collective data is accessed by approved devices.",
                         "trigger_list": [
                             {
-                                "trigger": "'okta_cba_${type}'",
+                                "trigger": "okta_cba",
                                 "validation": "Local"
                             }
                         ]
@@ -1763,7 +1765,7 @@ function finalise(){
             updateScriptLog "Jamf Pro Policy Name Failures:"
             updateScriptLog "${jamfProPolicyNameFailures}"
 
-            dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}. \n\nPlease complete the following steps:\n1. Reboot and login to your ${modelName}  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the ${supportTeamName},  \n${supportTeamErrorKB}. "
+#           dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}. \n\nPlease complete the following steps:\n1. Reboot and login to your ${modelName}  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the ${supportTeamName},  \n${supportTeamErrorKB}. "
             dialogUpdateFailure "icon: SF=xmark.circle.fill,weight=bold,colour1=#BB1717,colour2=#F31F1F"
             dialogUpdateFailure "button1text: ${button1textCompletionActionOption}"
 
