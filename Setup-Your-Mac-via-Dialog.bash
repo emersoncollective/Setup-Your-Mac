@@ -55,6 +55,24 @@
 #   - Reverted `mktemp`-created files to pre-SYM `1.12.1` behaviour
 #   - Updated required version of swiftDialog to `2.3.2.4726`
 #
+#   Version 1.12.7, 09-Sep-2023, Dan K. Snelson (@dan-snelson)
+#   - Added ability disable the "Continue" button in the User Input "Welcome" dialog until Dynamic Download Estimates have complete ([Pull Request No. 93](https://github.com/dan-snelson/Setup-Your-Mac/pull/93); thanks, @Eltord!)
+#   - Added a check to account for if the `loggedInUser` returns in ALL CAPS (as this sometimes happens with SSO Attributes) ([Pull Request No. 94](https://github.com/dan-snelson/Setup-Your-Mac/pull/94); thanks for another one, @Eltord!)
+#   - Added a Pre-flight Check for the running shell environment: Will exit gracefully if the shell does not match \bin\bash. ([Pull Request No. 95](https://github.com/dan-snelson/Setup-Your-Mac/pull/95); thanks — yet again — @drtaru!)
+#   - Remove any default dialog file
+#
+#   Version 1.12.8, 13-Sep-2023, Dan K. Snelson (@dan-snelson)
+#   - Added a check for FileVault being enabled during Setup Assistant (for macOS 14 Sonoma) ([Pull Request No. 96](https://github.com/dan-snelson/Setup-Your-Mac/pull/96); thanks, Obi-@drtaru!)
+#
+#   Version 1.12.9, 15-Sep-2023, Dan K. Snelson (@dan-snelson)
+#   - Added `-L` to `curl` command when caching banner images (thanks for the suggestion, @bartreardon!)
+#   - Added `swiftDialogMinimumRequiredVersion` variable to more easily track the minimum build. ([Pull Request No. 98](https://github.com/dan-snelson/Setup-Your-Mac/pull/98); thanks, @GadgetGeekNI!)
+#   - Hide unused Support variables ([Pull Request No. 99](https://github.com/dan-snelson/Setup-Your-Mac/pull/99); thanks again, @GadgetGeekNI!)
+#   - Added Pre-flight Check: Validate `supportTeam` variables are populated ([Pull Request No. 100](https://github.com/dan-snelson/Setup-Your-Mac/pull/100); thanks for another one, @GadgetGeekNI!)
+#
+#   Version 1.12.10, 15-Sep-2023, Dan K. Snelson (@dan-snelson)
+#   - Better WelcomeMessage logic and variable handling ([Pull Request No. 101](https://github.com/dan-snelson/Setup-Your-Mac/pull/101); thanks big bunches, @GadgetGeekNI!)
+#
 ####################################################################################################
 
 
@@ -69,7 +87,7 @@
 # Script Version and Jamf Pro Script Parameters
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-scriptVersion="1.12.6"
+scriptVersion="1.12.10"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
 debugMode="${5:-"false"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
@@ -77,8 +95,15 @@ welcomeDialog="${6:-"false"}"                                               # Pa
 completionActionOption="${7:-"wait"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
 requiredMinimumBuild="${8:-"disabled"}"                                         # Parameter 8: Required Minimum Build [ disabled (default) | 22E ] (i.e., Your organization's required minimum build of macOS to allow users to proceed; use "22E" for macOS 13.3)
 outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     # Parameter 9: Outdated OS Action [ /System/Library/CoreServices/Software Update.app (default) | jamfselfservice://content?entity=policy&id=117&action=view ] (i.e., Jamf Pro Self Service policy ID for operating system ugprades)
+<<<<<<< HEAD
 webhookURL="${10:-"https://hooks.slack.com/services/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"}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
 presetConfiguration="${11:-"Required"}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: Only used when `welcomeDialog` is set to `video` or `false`)
+=======
+webhookURL="${10:-""}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
+presetConfiguration="${11:-""}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: If set, `promptForConfiguration` will be automatically suppressed and the preselected configuration will be used instead)
+swiftDialogMinimumRequiredVersion="2.3.2.4726"                                  # This will be set and updated as dependancies on newer features change.
+
+>>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -132,12 +157,24 @@ brandingIconLight="https://cdn-icons-png.flaticon.com/512/979/979585.png"
 brandingIconDark="https://cdn-icons-png.flaticon.com/512/740/740878.png"
 
 # IT Support Variables - Use these if the default text is fine but you want your org's info inserted instead
+<<<<<<< HEAD
 #supportTeamName="IT Help Desk"
 ##supportTeamPhone=""
 #supportTeamEmail="ithelp@emersoncollective.com"
 #supportKB="New Computer Set Up Guide"
 #supportTeamErrorKB=", and mention [${supportKB}](https://emersoncollective.zendesk.com/hc/en-us/articles/12939465994139-New-Computer-Set-Up-Guide#h_01GSB7EE8JGABB1NN84WNNK12N)"
 #supportTeamHelpKB="\n- **Help Center Article:** ${supportKB}"
+=======
+supportTeamName="Support Team Name"
+supportTeamPhone="+1 (801) 555-1212"
+supportTeamEmail="support@domain.com"
+supportKB="KB8675309"
+supportTeamErrorKB=", and mention [${supportKB}](https://servicenow.company.com/support?id=kb_article_view&sysparm_article=${supportKB}#Failures)"
+supportTeamHelpKB="\n- **Knowledge Base Article:** ${supportKB}"
+>>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
+
+# Disable the "Continue" button in the User Input "Welcome" dialog until Dynamic Download Estimates have complete [ true | false ] (thanks, @Eltord!)
+lockContinueBeforeEstimations="false"
 
 
 
@@ -230,6 +267,17 @@ updateScriptLog "PRE-FLIGHT CHECK: Initiating …"
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Pre-flight Check: Confirm script is running under bash
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+if [[ "$BASH" != "/bin/bash" ]] ; then
+    updateScriptLog "PRE-FLIGHT CHECK: This script must be run under 'bash', please do not run it using 'sh', 'zsh', etc.; exiting."
+    exit 1
+fi
+
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Pre-flight Check: Confirm script is running as root
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -285,7 +333,7 @@ until { [[ "${loggedInUser}" != "_mbsetupuser" ]] || [[ "${counter}" -gt "180" ]
 done
 
 loggedInUserFullname=$( id -F "${loggedInUser}" )
-loggedInUserFirstname=$( echo "$loggedInUserFullname" | sed -E 's/^.*, // ; s/([^ ]*).*/\1/' | sed 's/\(.\{25\}\).*/\1…/' | awk '{print toupper(substr($0,1,1))substr($0,2)}' )
+loggedInUserFirstname=$( echo "$loggedInUserFullname" | sed -E 's/^.*, // ; s/([^ ]*).*/\1/' | sed 's/\(.\{25\}\).*/\1…/' | awk '{print ( $0 == toupper($0) ? toupper(substr($0,1,1))substr(tolower($0),2) : toupper(substr($0,1,1))substr($0,2) )}' )
 loggedInUserID=$( id -u "${loggedInUser}" )
 updateScriptLog "PRE-FLIGHT CHECK: Current Logged-in User First Name: ${loggedInUserFirstname}"
 updateScriptLog "PRE-FLIGHT CHECK: Current Logged-in User ID: ${loggedInUserID}"
@@ -468,9 +516,9 @@ function dialogCheck() {
     else
 
         dialogVersion=$(/usr/local/bin/dialog --version)
-        if [[ "${dialogVersion}" < "2.3.2.4726" ]]; then
+        if [[ "${dialogVersion}" < "${swiftDialogMinimumRequiredVersion}" ]]; then
             
-            updateScriptLog "PRE-FLIGHT CHECK: swiftDialog version ${dialogVersion} found but swiftDialog 2.3.2.4726 or newer is required; updating..."
+            updateScriptLog "PRE-FLIGHT CHECK: swiftDialog version ${dialogVersion} found but swiftDialog ${swiftDialogMinimumRequiredVersion} or newer is required; updating..."
             dialogInstall
             
         else
@@ -484,6 +532,22 @@ function dialogCheck() {
 }
 
 dialogCheck
+
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Pre-flight Check: Validate `supportTeam` variables are populated
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+if [[ -z $supportTeamName ]]; then
+    updateScriptLog "PRE-FLIGHT CHECK: 'supportTeamName' must be populated to proceed; exiting"
+    exit 1
+fi
+
+if [[ -z $supportTeamPhone && -z $supportTeamEmail && -z $supportKB ]]; then
+    updateScriptLog "PRE-FLIGHT CHECK: At least ONE 'supportTeam' variable must be populated to proceed; exiting"
+    exit 1
+fi
 
 
 
@@ -549,7 +613,29 @@ failureCommandFile=$( mktemp -u /var/tmp/dialogCommandFileFailure.XXX )
 
 welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}"
 
+<<<<<<< HEAD
 #welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}.  \n\nIf you need assistance, please contact the ${supportTeamName} at  \n and mention ${supportKB}.  \n\n---"
+=======
+welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}."
+
+if [ -n "$supportTeamName" ]; then
+  welcomeMessage+="\n\nIf you need assistance, please contact the ${supportTeamName}:"
+
+    if [ -n "$supportTeamPhone" ]; then
+        welcomeMessage+="\n - **Phone**: ${supportTeamPhone}"
+    fi
+
+    if [ -n "$supportTeamEmail" ]; then
+        welcomeMessage+="\n - **Email**: ${supportTeamEmail}"
+    fi
+    
+    if [ -n "$supportKB" ]; then
+        welcomeMessage+=" and mention ${supportKB}"
+    fi
+fi
+
+welcomeMessage+="\n\n---"
+>>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
 
 if { [[ "${promptForConfiguration}" == "true" ]] && [[ "${welcomeDialog}" != "messageOnly" ]]; } then
     welcomeMessage+="  \n\n#### Configurations  \n- **${configurationOneName}:** ${configurationOneDescription}  \n- **${configurationTwoName}:** ${configurationTwoDescription}  \n- **${configurationThreeName}:** ${configurationThreeDescription}"
@@ -569,7 +655,7 @@ welcomeCaption="Please review the above video, then click Continue."
 welcomeVideoID="vimeoid=844672129"
 
 # Check if the custom welcomeBannerImage is available, and if not, use a alternative image
-if curl --output /dev/null --silent --head --fail "$welcomeBannerImage" || [ -f "$welcomeBannerImage" ]; then
+if curl -L --output /dev/null --silent --head --fail "$welcomeBannerImage" || [ -f "$welcomeBannerImage" ]; then
     updateScriptLog "WELCOME DIALOG: welcomeBannerImage is available, using it"
 else
     updateScriptLog "WELCOME DIALOG: welcomeBannerImage is not available, using a default image"
@@ -580,7 +666,7 @@ fi
 if [[ $welcomeBannerImage == *"http"* ]]; then
     welcomeBannerImageFileName=$( echo ${welcomeBannerImage} | awk -F '/' '{print $NF}' )
     updateScriptLog "WELCOME DIALOG: Auto-caching hosted '$welcomeBannerImageFileName' …"
-    curl --location --silent "$welcomeBannerImage" -o "/var/tmp/${welcomeBannerImageFileName}"
+    curl -L --location --silent "$welcomeBannerImage" -o "/var/tmp/${welcomeBannerImageFileName}"
     welcomeBannerImage="/var/tmp/${welcomeBannerImageFileName}"
 fi
 
@@ -743,11 +829,36 @@ fi
 if [[ "${brandingBannerDisplayText}" == "true" ]] ; then bannerText="Setting up ${loggedInUserFirstname}‘s ${modelName}";
 else bannerText=""; fi
 
+<<<<<<< HEAD
 #helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n- **Email:** ${supportTeamEmail}  ${supportTeamHelpKB}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
+=======
+if [ -n "$supportTeamName" ]; then
+  helpmessage+="If you need assistance, please contact the ${supportTeamName}:\n"
+fi
+
+if [ -n "$supportTeamPhone" ]; then
+  helpmessage+="- **Telephone:** ${supportTeamPhone}\n"
+fi
+
+if [ -n "$supportTeamEmail" ]; then
+  helpmessage+="- **Email:** ${supportTeamEmail}\n"
+fi
+
+if [ -n "$supportKB" ]; then
+  helpmessage+="${supportTeamHelpKB}\n"
+fi
+
+helpmessage+="\n**Computer Information:**\n"
+helpmessage+="- **Operating System:** ${macOSproductVersion} (${macOSbuildVersion})\n"
+helpmessage+="- **Serial Number:** ${serialNumber}\n"
+helpmessage+="- **Dialog:** ${dialogVersion}\n"
+helpmessage+="- **Started:** ${timestamp}"
+
+>>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
 infobox="Analyzing input …" # Customize at "Update Setup Your Mac's infobox"
 
 # Check if the custom bannerImage is available, and if not, use a alternative image
-if curl --output /dev/null --silent --head --fail "$bannerImage" || [ -f "$bannerImage" ]; then
+if curl -L --output /dev/null --silent --head --fail "$bannerImage" || [ -f "$bannerImage" ]; then
     updateScriptLog "WELCOME DIALOG: bannerImage is available"
 else
     updateScriptLog "WELCOME DIALOG: bannerImage is not available, using alternative image"
@@ -1763,9 +1874,36 @@ function finalise(){
 
             updateScriptLog "\n\n# # #\n# FAILURE DIALOG\n# # #\n"
             updateScriptLog "Jamf Pro Policy Name Failures:"
-            updateScriptLog "${jamfProPolicyNameFailures}"
+            
 
+            failureMessage="A failure has been detected, ${loggedInUserFirstname}. \n\nPlease complete the following steps:\n1. Reboot and login to your ${modelName}  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}"
+            
+            if [[ -n "$supportTeamName" ]]; then
+                supportContactMessage+="If you need assistance, please contact the ${supportTeamName},"
+
+                if [[ -n "$supportTeamEmail" ]]; then
+                    supportContactMessage+="\n${supportTeamEmail}"
+                fi
+
+                if [[ -n "${supportTeamPhone}" ]]; then
+                    supportContactMessage+="\n${supportTeamPhone}"
+                fi
+
+                if [[ -n "${supportKB}" ]]; then
+                    supportContactMessage+="\n${supportTeamErrorKB}"
+                fi
+            supportContactMessage+="."
+            fi
+
+
+            failureMessage+="\n\n${supportContactMessage}"
+
+            dialogUpdateFailure "message: ${failureMessage}"
+
+<<<<<<< HEAD
 #           dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}. \n\nPlease complete the following steps:\n1. Reboot and login to your ${modelName}  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the ${supportTeamName},  \n${supportTeamErrorKB}. "
+=======
+>>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
             dialogUpdateFailure "icon: SF=xmark.circle.fill,weight=bold,colour1=#BB1717,colour2=#F31F1F"
             dialogUpdateFailure "button1text: ${button1textCompletionActionOption}"
 
@@ -2032,7 +2170,8 @@ function validatePolicyResult() {
                     dialogUpdateSetupYourMac "listitem: index: $i, status: wait, statustext: Checking …"
                     updateScriptLog "SETUP YOUR MAC DIALOG: Validate Policy Result: Pausing for 5 seconds for FileVault … "
                     sleep 5 # Arbitrary value; tuning needed
-                    if [[ -f /Library/Preferences/com.apple.fdesetup.plist ]]; then
+                    fileVaultCheck=$( fdesetup isactive )
+                    if [[ -f /Library/Preferences/com.apple.fdesetup.plist ]] || [[ "$fileVaultCheck" == "true" ]]; then
                         fileVaultStatus=$( fdesetup status -extended -verbose 2>&1 )
                         case ${fileVaultStatus} in
                             *"FileVault is On."* ) 
@@ -2472,6 +2611,11 @@ function checkNetworkQualityConfigurations() {
     updateScriptLog "WELCOME DIALOG: Network Quality Test: Started: $dlStartDate, Ended: $dlEndDate; Download: $mbps Mbps, Responsiveness: $dlResponsiveness"
     dialogUpdateWelcome "infobox: **Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimates:**  \n- ${configurationOneName}:  \n$(printf '%dh:%dm:%ds\n' $((configurationOneEstimatedSeconds/3600)) $((configurationOneEstimatedSeconds%3600/60)) $((configurationOneEstimatedSeconds%60)))  \n\n- ${configurationTwoName}:  \n$(printf '%dh:%dm:%ds\n' $((configurationTwoEstimatedSeconds/3600)) $((configurationTwoEstimatedSeconds%3600/60)) $((configurationTwoEstimatedSeconds%60)))  \n\n- ${configurationThreeName}:  \n$(printf '%dh:%dm:%ds\n' $((configurationThreeEstimatedSeconds/3600)) $((configurationThreeEstimatedSeconds%3600/60)) $((configurationThreeEstimatedSeconds%60)))"
 
+    # If option to lock the continue button is set to true, enable the continue button now to let the user progress
+    if [[ "$lockContinueBeforeEstimations" = "true" ]]; then
+        updateScriptLog "WELCOME DIALOG: Enabling Continue Button"
+        dialogUpdateWelcome "button1: enable"
+    fi
 }
 
 
@@ -2714,8 +2858,8 @@ function quitScript() {
 
     # Toggle `jamf` binary check-in 
     if [[ "${completionActionOption}" == "Log Out"* ]] || [[ "${completionActionOption}" == "Sleep"* ]] || [[ "${completionActionOption}" == "Quit" ]] || [[ "${completionActionOption}" == "wait" ]] ; then
-		toggleJamfLaunchDaemon
-	fi
+        toggleJamfLaunchDaemon
+    fi
     
     # Remove welcomeCommandFile
     if [[ -e ${welcomeCommandFile} ]]; then
@@ -2739,6 +2883,12 @@ function quitScript() {
     if [[ -e ${failureCommandFile} ]]; then
         updateScriptLog "QUIT SCRIPT: Removing ${failureCommandFile} …"
         rm "${failureCommandFile}"
+    fi
+
+    # Remove any default dialog file
+    if [[ -e /var/tmp/dialog.log ]]; then
+        updateScriptLog "QUIT SCRIPT: Removing default dialog file …"
+        rm /var/tmp/dialog.log
     fi
 
     # Check for user clicking "Quit" at Welcome dialog
@@ -2882,8 +3032,18 @@ elif [[ "${welcomeDialog}" == "userInput" ]]; then
         updateScriptLog "WELCOME DIALOG: Write 'welcomeJSON' to $welcomeJSONFile …"
         echo "$welcomeJSON" > "$welcomeJSONFile"
 
-        updateScriptLog "WELCOME DIALOG: Display 'Welcome' dialog …"
-        welcomeResults=$( eval "${dialogBinary} --jsonfile ${welcomeJSONFile} --json" )
+        # If option to lock the continue button is set to true, open welcome dialog with button 1 disabled
+        if [[ "$lockContinueBeforeEstimations" = "true" ]]; then
+            
+            updateScriptLog "WELCOME DIALOG: Display 'Welcome' dialog with disabled Continue Button …"
+            welcomeResults=$( eval "${dialogBinary} --jsonfile ${welcomeJSONFile} --json --button1disabled" )
+            
+        else
+
+            updateScriptLog "WELCOME DIALOG: Display 'Welcome' dialog …"
+            welcomeResults=$( eval "${dialogBinary} --jsonfile ${welcomeJSONFile} --json" )
+
+        fi
 
     else
 
@@ -3228,6 +3388,7 @@ fi
 # Update Setup Your Mac's helpmessage
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+<<<<<<< HEAD
 #outputLineNumberInVerboseDebugMode
 #
 #if [[ "${symConfiguration}" != *"Catch-all"* ]]; then
@@ -3243,6 +3404,46 @@ fi
 #fi
 #
 #dialogUpdateSetupYourMac "helpmessage: ${helpmessage}"
+=======
+outputLineNumberInVerboseDebugMode
+
+if [[ "${symConfiguration}" != *"Catch-all"* ]]; then
+
+    if [[ -n ${infoboxConfiguration} ]]; then
+
+        updateScriptLog "Update 'helpmessage' with Configuration: ${infoboxConfiguration} …"
+
+        helpmessage="If you need assistance…  \n\n"
+        
+        if [ -n "$supportTeamName" ]; then
+            helpmessage+="Please contact the $supportTeamName:\n"
+        fi
+
+        if [ -n "$supportTeamPhone" ]; then
+            helpmessage+="- **Telephone:** $supportTeamPhone\n"
+        fi
+
+        if [ -n "$supportTeamEmail" ]; then
+            helpmessage+="- **Email:** $supportTeamEmail\n"
+        fi
+
+        if [ -n "$supportKB" ]; then
+            helpmessage+="- **Knowledge Base Article:** $supportKB\n"
+        fi
+
+        helpmessage+="\n**Configuration:**\n- $infoboxConfiguration\n"
+        helpmessage+="\n**Computer Information:**\n"
+        helpmessage+="- **Operating System:** $macOSproductVersion ($macOSbuildVersion)\n"
+        helpmessage+="- **Serial Number:** $serialNumber\n"
+        helpmessage+="- **Dialog:** $dialogVersion\n"
+        helpmessage+="- **Started:** $timestamp\n"
+        
+    fi
+
+fi
+
+dialogUpdateSetupYourMac "helpmessage: ${helpmessage}"
+>>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
 
 
 
