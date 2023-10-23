@@ -90,20 +90,13 @@
 scriptVersion="1.12.10"
 export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 scriptLog="${4:-"/Library/Logs/mac_setup.log"}"                        # Parameter 4: Script Log Location [ /var/log/org.churchofjesuschrist.log ] (i.e., Your organization's default location for client-side logs)
-debugMode="${5:-"false"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
+debugMode="${5:-"true"}"                                                     # Parameter 5: Debug Mode [ verbose (default) | true | false ]
 welcomeDialog="${6:-"false"}"                                               # Parameter 6: Welcome dialog [ userInput (default) | video | false ]
 completionActionOption="${7:-"wait"}"                               # Parameter 7: Completion Action [ wait | sleep (with seconds) | Shut Down | Shut Down Attended | Shut Down Confirm | Restart | Restart Attended (default) | Restart Confirm | Log Out | Log Out Attended | Log Out Confirm ]
 requiredMinimumBuild="${8:-"disabled"}"                                         # Parameter 8: Required Minimum Build [ disabled (default) | 22E ] (i.e., Your organization's required minimum build of macOS to allow users to proceed; use "22E" for macOS 13.3)
 outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     # Parameter 9: Outdated OS Action [ /System/Library/CoreServices/Software Update.app (default) | jamfselfservice://content?entity=policy&id=117&action=view ] (i.e., Jamf Pro Self Service policy ID for operating system ugprades)
-<<<<<<< HEAD
 webhookURL="${10:-"https://hooks.slack.com/services/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"}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
 presetConfiguration="${11:-"Required"}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: Only used when `welcomeDialog` is set to `video` or `false`)
-=======
-webhookURL="${10:-""}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
-presetConfiguration="${11:-""}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: If set, `promptForConfiguration` will be automatically suppressed and the preselected configuration will be used instead)
-swiftDialogMinimumRequiredVersion="2.3.2.4726"                                  # This will be set and updated as dependancies on newer features change.
-
->>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -157,21 +150,12 @@ brandingIconLight="https://cdn-icons-png.flaticon.com/512/979/979585.png"
 brandingIconDark="https://cdn-icons-png.flaticon.com/512/740/740878.png"
 
 # IT Support Variables - Use these if the default text is fine but you want your org's info inserted instead
-<<<<<<< HEAD
-#supportTeamName="IT Help Desk"
+supportTeamName="IT Help Desk"
 ##supportTeamPhone=""
-#supportTeamEmail="ithelp@emersoncollective.com"
+supportTeamEmail="ithelp@emersoncollective.com"
 #supportKB="New Computer Set Up Guide"
 #supportTeamErrorKB=", and mention [${supportKB}](https://emersoncollective.zendesk.com/hc/en-us/articles/12939465994139-New-Computer-Set-Up-Guide#h_01GSB7EE8JGABB1NN84WNNK12N)"
 #supportTeamHelpKB="\n- **Help Center Article:** ${supportKB}"
-=======
-supportTeamName="Support Team Name"
-supportTeamPhone="+1 (801) 555-1212"
-supportTeamEmail="support@domain.com"
-supportKB="KB8675309"
-supportTeamErrorKB=", and mention [${supportKB}](https://servicenow.company.com/support?id=kb_article_view&sysparm_article=${supportKB}#Failures)"
-supportTeamHelpKB="\n- **Knowledge Base Article:** ${supportKB}"
->>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
 
 # Disable the "Continue" button in the User Input "Welcome" dialog until Dynamic Download Estimates have complete [ true | false ] (thanks, @Eltord!)
 lockContinueBeforeEstimations="false"
@@ -613,29 +597,7 @@ failureCommandFile=$( mktemp -u /var/tmp/dialogCommandFileFailure.XXX )
 
 welcomeTitle="Happy $( date +'%A' ), ${loggedInUserFirstname}!  \nWelcome to your new ${modelName}"
 
-<<<<<<< HEAD
-#welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}.  \n\nIf you need assistance, please contact the ${supportTeamName} at  \n and mention ${supportKB}.  \n\n---"
-=======
-welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}."
-
-if [ -n "$supportTeamName" ]; then
-  welcomeMessage+="\n\nIf you need assistance, please contact the ${supportTeamName}:"
-
-    if [ -n "$supportTeamPhone" ]; then
-        welcomeMessage+="\n - **Phone**: ${supportTeamPhone}"
-    fi
-
-    if [ -n "$supportTeamEmail" ]; then
-        welcomeMessage+="\n - **Email**: ${supportTeamEmail}"
-    fi
-    
-    if [ -n "$supportKB" ]; then
-        welcomeMessage+=" and mention ${supportKB}"
-    fi
-fi
-
-welcomeMessage+="\n\n---"
->>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
+welcomeMessage="Please enter the **required** information for your ${modelName}, select your preferred **Configuration** then click **Continue** to start applying settings to your new Mac. \n\nOnce completed, the **Wait** button will be enabled and you‘ll be able to review the results before restarting your ${modelName}.  \n\nIf you need assistance, please contact the ${supportTeamName} at  \n and mention ${supportKB}.  \n\n---"
 
 if { [[ "${promptForConfiguration}" == "true" ]] && [[ "${welcomeDialog}" != "messageOnly" ]]; } then
     welcomeMessage+="  \n\n#### Configurations  \n- **${configurationOneName}:** ${configurationOneDescription}  \n- **${configurationTwoName}:** ${configurationTwoDescription}  \n- **${configurationThreeName}:** ${configurationThreeDescription}"
@@ -829,32 +791,7 @@ fi
 if [[ "${brandingBannerDisplayText}" == "true" ]] ; then bannerText="Setting up ${loggedInUserFirstname}‘s ${modelName}";
 else bannerText=""; fi
 
-<<<<<<< HEAD
-#helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n- **Email:** ${supportTeamEmail}  ${supportTeamHelpKB}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
-=======
-if [ -n "$supportTeamName" ]; then
-  helpmessage+="If you need assistance, please contact the ${supportTeamName}:\n"
-fi
-
-if [ -n "$supportTeamPhone" ]; then
-  helpmessage+="- **Telephone:** ${supportTeamPhone}\n"
-fi
-
-if [ -n "$supportTeamEmail" ]; then
-  helpmessage+="- **Email:** ${supportTeamEmail}\n"
-fi
-
-if [ -n "$supportKB" ]; then
-  helpmessage+="${supportTeamHelpKB}\n"
-fi
-
-helpmessage+="\n**Computer Information:**\n"
-helpmessage+="- **Operating System:** ${macOSproductVersion} (${macOSbuildVersion})\n"
-helpmessage+="- **Serial Number:** ${serialNumber}\n"
-helpmessage+="- **Dialog:** ${dialogVersion}\n"
-helpmessage+="- **Started:** ${timestamp}"
-
->>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
+helpmessage="If you need assistance, please contact the ${supportTeamName}:  \n- **Email:** ${supportTeamEmail}  ${supportTeamHelpKB}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
 infobox="Analyzing input …" # Customize at "Update Setup Your Mac's infobox"
 
 # Check if the custom bannerImage is available, and if not, use a alternative image
@@ -1002,14 +939,44 @@ function policyJSONConfiguration() {
                             }
                         ]
                     },     
-                    {
-                        "listitem": "Microsoft Office 365",
-                        "icon": "66e495c8ac8f827b600b4bd78976b4e023650791f5bcdcd90e08a4d01a2a469f",
+                   {
+                        "listitem": "Microsoft Word",
+                        "icon": "1800153cc1a89ea9b05fdb67c8798d956ce020ebda1ecf168661bb5a2171c569",
                         "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
                         "trigger_list": [
                             {
-                                "trigger": "install_365",
+                                "trigger": "install_word",
+                                "validation": "/Applications/Microsoft Word.app/Contents/Info.plist"
+                            }
+                        ]
+                    },                    {
+                        "listitem": "Microsoft Excel",
+                        "icon": "7dfe1aed11821cbeaabf4422c5af370a5e107f7de9182314fe4b0e62984e09ba",
+                        "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_excel",
+                                "validation": "/Applications/Microsoft Excel.app/Contents/Info.plist"
+                            }
+                        ]
+                    },                    {
+                        "listitem": "Microsoft Outlook",
+                        "icon": "4e12d581fa761cac92eddbd9ba110a1c38eea3ad347ecf45d4955fa520104256",
+                        "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_outlook",
                                 "validation": "/Applications/Microsoft Outlook.app/Contents/Info.plist"
+                            }
+                        ]
+                    },                    {
+                        "listitem": "Microsoft PowerPoint",
+                        "icon": "6f710a9d87e8145a218f75b1bf3b193e6315d5c0134971a82ddf98f0beb514da",
+                        "progresstext": "Utilize the full Microsoft 365 suite of applicaitons.",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_powerpoint",
+                                "validation": "/Applications/Microsoft PowerPoint.app/Contents/Info.plist"
                             }
                         ]
                     },
@@ -1900,10 +1867,7 @@ function finalise(){
 
             dialogUpdateFailure "message: ${failureMessage}"
 
-<<<<<<< HEAD
 #           dialogUpdateFailure "message: A failure has been detected, ${loggedInUserFirstname}. \n\nPlease complete the following steps:\n1. Reboot and login to your ${modelName}  \n2. Login to Self Service  \n3. Re-run any failed policy listed below  \n\nThe following failed:  \n${jamfProPolicyNameFailures}  \n\n\n\nIf you need assistance, please contact the ${supportTeamName},  \n${supportTeamErrorKB}. "
-=======
->>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
             dialogUpdateFailure "icon: SF=xmark.circle.fill,weight=bold,colour1=#BB1717,colour2=#F31F1F"
             dialogUpdateFailure "button1text: ${button1textCompletionActionOption}"
 
@@ -3388,62 +3352,21 @@ fi
 # Update Setup Your Mac's helpmessage
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-<<<<<<< HEAD
-#outputLineNumberInVerboseDebugMode
-#
-#if [[ "${symConfiguration}" != *"Catch-all"* ]]; then
-#
-#   if [[ -n ${infoboxConfiguration} ]]; then
-#
-#       updateScriptLog "Update 'helpmessage' with Configuration: ${infoboxConfiguration} …"
-#
-#       helpmessage="If you need assistance, please contact the ${supportTeamName}: \n- **Email:** ${supportTeamEmail}  \n- **Knowledge Base Article:** ${supportKB}  \n\n**Configuration:** \n- ${infoboxConfiguration}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
-#       
-#   fi
-#
-#fi
-#
-#dialogUpdateSetupYourMac "helpmessage: ${helpmessage}"
-=======
-outputLineNumberInVerboseDebugMode
+              outputLineNumberInVerboseDebugMode
 
-if [[ "${symConfiguration}" != *"Catch-all"* ]]; then
+              if [[ "${symConfiguration}" != *"Catch-all"* ]]; then
 
-    if [[ -n ${infoboxConfiguration} ]]; then
+                if [[ -n ${infoboxConfiguration} ]]; then
 
-        updateScriptLog "Update 'helpmessage' with Configuration: ${infoboxConfiguration} …"
+                  updateScriptLog "Update 'helpmessage' with Configuration: ${infoboxConfiguration} …"
 
-        helpmessage="If you need assistance…  \n\n"
-        
-        if [ -n "$supportTeamName" ]; then
-            helpmessage+="Please contact the $supportTeamName:\n"
-        fi
+                  helpmessage="If you need assistance, please contact the ${supportTeamName}: \n- **Email:** ${supportTeamEmail}  \n- **Knowledge Base Article:** ${supportKB}  \n\n**Configuration:** \n- ${infoboxConfiguration}  \n\n**Computer Information:**  \n- **Operating System:**  ${macOSproductVersion} (${macOSbuildVersion})  \n- **Serial Number:** ${serialNumber}  \n- **Dialog:** ${dialogVersion}  \n- **Started:** ${timestamp}"
+                  
+                fi
 
-        if [ -n "$supportTeamPhone" ]; then
-            helpmessage+="- **Telephone:** $supportTeamPhone\n"
-        fi
+              fi
 
-        if [ -n "$supportTeamEmail" ]; then
-            helpmessage+="- **Email:** $supportTeamEmail\n"
-        fi
-
-        if [ -n "$supportKB" ]; then
-            helpmessage+="- **Knowledge Base Article:** $supportKB\n"
-        fi
-
-        helpmessage+="\n**Configuration:**\n- $infoboxConfiguration\n"
-        helpmessage+="\n**Computer Information:**\n"
-        helpmessage+="- **Operating System:** $macOSproductVersion ($macOSbuildVersion)\n"
-        helpmessage+="- **Serial Number:** $serialNumber\n"
-        helpmessage+="- **Dialog:** $dialogVersion\n"
-        helpmessage+="- **Started:** $timestamp\n"
-        
-    fi
-
-fi
-
-dialogUpdateSetupYourMac "helpmessage: ${helpmessage}"
->>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
+              dialogUpdateSetupYourMac "helpmessage: ${helpmessage}"
 
 
 
