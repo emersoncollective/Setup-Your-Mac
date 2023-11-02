@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## 1.13.0
+### 24-Oct-2023
+- 🔥 **Breaking Change** for users of Setup Your Mac prior to `1.13.0` 🔥 
+    - Removed `setupYourMacPolicyArrayIconPrefixUrl` (in favor using the fully qualified domain name of the server which hosts your icons)
+- Added [SYM-Helper] to identify variables which can be configured in SYM-Helper (0.8.0)
+- Updated sample banner image (Image by pikisuperstar on Freepik)
+- Added `overlayoverride` variable to dynamically override the `overlayicon`, based on which Configuration is selected by the end-user ([Pull Request No. 111](https://github.com/dan-snelson/Setup-Your-Mac/pull/111); thanks yet again, @drtaru!)
+- Modified the display of support-related information (including adding `supportTeamWebsite` (Addresses [Issue No. 97](https://github.com/dan-snelson/Setup-Your-Mac/issues/97); thanks, @theahadub!))
+- Adjustments to Completion Actions (including the `wait` flavor; thanks for the heads-up, @Tom!)
+- Updated Microsoft Teams filepath validation
+- Add position prompt (Addresses [Issue No. 120](https://github.com/dan-snelson/Setup-Your-Mac/issues/120); thanks for the suggestion, @astrugatch! [Pull Request No. 121](https://github.com/dan-snelson/Setup-Your-Mac/pull/121); thanks, @drtaru! This has to be your best one yet!)
+- Corrections to "Continue" button after Network Quality test [Pull Request No. 115](https://github.com/dan-snelson/Setup-Your-Mac/pull/115); thanks, @delize!
+
+## 1.12.12
+### 28-Sep-2023
+- Added a failure indication when a "Local" validation trigger does not exist in the main script ([Pull Request No. 117](https://github.com/dan-snelson/Setup-Your-Mac/pull/117); thanks for another one, @drtaru!)
+
+## 1.12.11
+### 26-Sep-2023
+- Restored logging of `jamfProPolicyNameFailures`
+- Updated `if … then` statements when disabling the "Continue" button in the User Input "Welcome" dialog until Dynamic Download Estimates have complete ([Pull Request No. 115](https://github.com/dan-snelson/Setup-Your-Mac/pull/116); thanks, @delize!)
+
 ## 1.12.10
 ### 15-Sep-2023
 - Better WelcomeMessage logic and variable handling ([Pull Request No. 101](https://github.com/dan-snelson/Setup-Your-Mac/pull/101); thanks big bunches, @GadgetGeekNI!)

@@ -2481,7 +2481,7 @@ function completionAction() {
 
 function welcomeDialogInfoboxAnimation() {
     callingPID=$1
-    # clock_emojis=("🕐" "🕑" "🕒" "🕓" "🕔" "🕕" "🕖" "🕗" "🕘" "🕙" "🕚" "🕛")
+    # clock_emojis=("�" "�" "�" "�" "�" "�" "�" "�" "�" "�" "�" "�")
     clock_emojis=("&#128336;" "&#128337;" "&#128338;" "&#128339;" "&#128340;" "&#128341;" "&#128342;" "&#128343;" "&#128344;" "&#128345;" "&#128346;" "&#128347;")
     while true; do
         for emoji in "${clock_emojis[@]}"; do
@@ -2504,7 +2504,7 @@ function welcomeDialogInfoboxAnimation() {
 
 function setupYourMacDialogInfoboxAnimation() {
     callingPID=$1
-    # clock_emojis=("🕐" "🕑" "🕒" "🕓" "🕔" "🕕" "🕖" "🕗" "🕘" "🕙" "🕚" "🕛")
+    # clock_emojis=("�" "�" "�" "�" "�" "�" "�" "�" "�" "�" "�" "�")
     clock_emojis=("&#128336;" "&#128337;" "&#128338;" "&#128339;" "&#128340;" "&#128341;" "&#128342;" "&#128343;" "&#128344;" "&#128345;" "&#128346;" "&#128347;")
     while true; do
         for emoji in "${clock_emojis[@]}"; do

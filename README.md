@@ -1,12 +1,12 @@
- [<img alt="Setup Your Mac (1.12.0)" src="images/SYM_icon.png" width="128" />](https://snelson.us/sym)
+ [<img alt="Setup Your Mac (1.13.0)" src="images/SYM_icon.png" width="128" />](https://snelson.us/sym)
  
- # Setup Your Mac (1.12.10) via swiftDialog (2.3.2)
+ # Setup Your Mac (1.13.0) with SYM-Helper via swiftDialog
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/dan-snelson/Setup-Your-Mac?display_name=tag) ![GitHub issues](https://img.shields.io/github/issues-raw/dan-snelson/Setup-Your-Mac) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/dan-snelson/Setup-Your-Mac) ![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/dan-snelson/Setup-Your-Mac) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/dan-snelson/Setup-Your-Mac) ![GitHub contributors (via allcontributors.org)](https://img.shields.io/github/all-contributors/dan-snelson/Setup-Your-Mac/main)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/dan-snelson/Setup-Your-Mac?display_name=tag) ![GitHub issues](https://img.shields.io/github/issues-raw/dan-snelson/Setup-Your-Mac) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/dan-snelson/Setup-Your-Mac) ![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/dan-snelson/Setup-Your-Mac) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/dan-snelson/Setup-Your-Mac)
 
-> With more accurate Dynamic Download Estimates, additional user-input fields and multiple speed improvements, Setup Your Mac (1.12.10) helps MacAdmins provide their users a seamless onboarding experience via swiftDialog (2.3.2).
+> Optimized to leverage SYM-Helper, Setup Your Mac (1.13.0) offers MacAdmins under-the-hood, quality-of-life improvements.
 
-[<img alt="Setup Your Mac (1.12.0)" src="images/Setup_Your_Mac_1.12.0_estimates.png" />](https://snelson.us/sym)
+[<img alt="Setup Your Mac (1.13.0)" src="images/SYM-Helper_SYM-1.13.0_Hero.png" />](https://snelson.us/sym)
 
 ## Introduction
 
@@ -14,13 +14,13 @@ Apple's Automated Device Enrollment helps streamline Mobile Device Management (M
 
 **Setup Your Mac** aims to simplify initial device configuration by leveraging `swiftDialog` and Jamf Pro Policy Custom Events to allow end-users to self-complete Mac setup _post-enrollment_.
 
-[Continue reading …](https://snelson.us/sym)
+[Continue reading …](https://snelson.us/symh)
 
 ### Script
 - [Setup-Your-Mac-via-Dialog.bash](Setup-Your-Mac-via-Dialog.bash)
 
 ### Contributors
-A special thanks to the ever-growing list of [contributors](CONTRIBUTORS.md); learn how you can contribute](CONTRIBUTING.md).
+A special thanks to the ever-growing list of [contributors](CONTRIBUTORS.md); learn how you can [contribute](CONTRIBUTING.md).
 
 ---
 
@@ -29,6 +29,8 @@ A special thanks to the ever-growing list of [contributors](CONTRIBUTORS.md); le
 > A stand-alone macOS app to help MacAdmins more easily deploy [Setup Your Mac](https://snelson.us/sym)
 
 ![SYM-Helper Hero](images/SYM-Helper-Hero.png)
+
+**NOTE:** When editing [Setup-Your-Mac-via-Dialog.bash](Setup-Your-Mac-via-Dialog.bash), &ldquo;[SYM-Helper]&rdquo; indicates variables which can be configured with SYM-Helper.
 
 [Documentation](https://snelson.us/sym-helper) | [Releases](https://github.com/BIG-RAT/SYM-Helper/releases)
 
@@ -46,6 +48,7 @@ While we _thought_ we'd done everything to help ensure our users had a seamless 
 
 ### Script
 <<<<<<< HEAD
+<<<<<<< HEAD
 - [Prompt-to-Setup-Your-Mac.bash](Prompt-to-Setup-Your-Mac.bash)
 =======
 - [Prompt-to-Setup-Your-Mac.bash](Prompt-to-Setup-Your-Mac.bash)
@@ -58,3 +61,6 @@ The response to Setup Your Mac has been both humbling and amazing; my personal t
 
 Learn how you can [contribute](CONTRIBUTING.md).
 >>>>>>> 77c95d116bd75a06156dbc8e631bfab568183e28
+=======
+- [Prompt-to-Setup-Your-Mac.bash](Prompt-to-Setup-Your-Mac.bash)
+>>>>>>> 465074f8f5eff793270534ed2e9d4e6c96b00ab9
