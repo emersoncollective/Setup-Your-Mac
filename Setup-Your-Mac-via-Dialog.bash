@@ -918,13 +918,23 @@ function policyJSONConfiguration() {
                     },
                     
                     {
-                        "listitem": "Code42",
-                        "icon": "0e94b0cca7ef6a747d0fd612f3af78b3757f3deb22d47372f21053da55699698",
+                        "listitem": "Code42 Backup Software",
+                        "icon": "fcdb7e1524cc4ab8fd42d09212d05663239d4964c7ffa8617e00097636a43352",
                         "progresstext": "Install the EC Data Protection and Backup Software",
                         "trigger_list": [
                             {
                                 "trigger": "install_code42",
                                 "validation": "/Applications/Code42.app/Contents/Info.plist"
+                            }
+                        ]
+                    },                    {
+                        "listitem": "Code42 Data Loss Prevention Software",
+                        "icon": "fcdb7e1524cc4ab8fd42d09212d05663239d4964c7ffa8617e00097636a43352",
+                        "progresstext": "Install the EC Data Loss Protection Software",
+                        "trigger_list": [
+                            {
+                                "trigger": "install_incydr",
+                                "validation": "/Applications/Code42-AAT.app/Contents/Info.plist"
                             }
                         ]
                     },
@@ -1057,8 +1067,8 @@ function policyJSONConfiguration() {
                         
                     },
                     {
-                        "listitem": "Code42 Running Validation",
-                        "icon": "0e94b0cca7ef6a747d0fd612f3af78b3757f3deb22d47372f21053da55699698",
+                        "listitem": "Code42 Backup Running Validation",
+                        "icon": "fcdb7e1524cc4ab8fd42d09212d05663239d4964c7ffa8617e00097636a43352",
                         "progresstext": "Verify that the Code42 agent is running",
                         "trigger_list": [
                             {
@@ -1534,7 +1544,7 @@ function policyJSONConfiguration() {
                         "trigger_list": [
                             {
                                 "trigger": "install_nudge",
-                                "validation": "/Applications/Google Drive.app/Contents/Info.plist"
+                                "validation": "/Applications/Utilities/Nudge.app"
                             }
                         ]
                     },{
