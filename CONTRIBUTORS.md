@@ -1,4 +1,7 @@
-[<img alt="Setup Your Mac (1.13.0)" src="images/SYM_icon.png" width="128" />](https://snelson.us/sym)
+<!-- markdownlint-disable-next-line first-line-heading no-inline-html -->
+[<img align="left" alt="Setup Your Mac (1.13.0)" src="images/SYM_icon.png" width="128" />](https://snelson.us/sym)
+
+<br>
 
 # Setup Your Mac Contributors
 
@@ -13,6 +16,12 @@
 ### Humbled & Amazed
 
 The response to Setup Your Mac has been both humbling and amazing; my personal thanks to MacAdmins worldwide and the ever-growing number of contributors:
+- Honestpuck for [Issue No. 134](https://github.com/setup-your-mac/Setup-Your-Mac/issues/134)
+- robjschroeder for [Pull Request No. 128](https://github.com/setup-your-mac/Setup-Your-Mac/pull/128)
+- drtaru for [Pull Request No. 131](https://github.com/setup-your-mac/Setup-Your-Mac/pull/131)
+- bartreardon for suggesting changing filepath validation test from `-f` (i.e., "True if file exists and is a regular file") to `-e` (i.e., "True if file exists (regardless of type).")
+- mrmte for [Issue 19](https://github.com/BIG-RAT/SYM-Helper/issues/19)
+- drtaru for [124](https://github.com/dan-snelson/Setup-Your-Mac/pull/124)
 - drtaru for [121](https://github.com/dan-snelson/Setup-Your-Mac/pull/121) (Best. One. Yet.)
 - astrugatch for [120](https://github.com/dan-snelson/Setup-Your-Mac/issues/120)
 - Tom for heads-up on the `wait` flavor of `completionActionOption`
